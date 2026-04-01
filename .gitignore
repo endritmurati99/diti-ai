@@ -1,0 +1,21 @@
+# Environment
+.env
+.env.local
+.env.production
+
+# Obsidian
+obsidian-vault/.obsidian/workspace.json
+obsidian-vault/.obsidian/workspace-mobile.json
+obsidian-vault/.trash/
+
+# n8n credentials (never commit)
+n8n/*.credentials
+n8n/*.enc
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node (falls spaeter relevant)
+node_modules/
