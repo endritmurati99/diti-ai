@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TelegramIntakeEvent",
+  "description": "Canonical event envelope produced by P1-telegram-intake-v2 Normalize Event node",
+  "type": "object",
+  "required": ["event_id", "source_system", "source_id", "chat_id", "command", "parse_ok"],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "ULID generated at intake time"
+    },
+    "source_system": {
+      "type": "string",
+      "const": "telegram"
+    },
+    "source_id": {
+      "type": "string",
+      "description": "Composite key: tg_{chat_id}_{message_id}"
+    },
+    "chat_id": {
+      "type": "integer",
+      "description": "Telegram chat ID"
+    },
+    "message_id": {
+      "type": "integer",
+      "description": "Telegram message ID"
+    },
+    "received_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of intake"
+    },
+    "raw_text": {
+      "type": "string",
+      "description": "Original unmodified message text"
+    },
+    "command": {
+      "type": "string",
+      "enum": ["task", "followup", "knowledge", "calendar_query", "help", "ping", "unknown"],
+      "description": "Parsed command type"
+    },
+    "entity_type": {
+      "type": "string",
+      "enum": ["task.create", "followup.create", "knowledge.draft", "calendar.query", ""],
+      "description": "Domain entity type"
+    },
+    "target_system": {
+      "type": "string",
+      "enum": ["google_tasks", "obsidian", "google_calendar", ""],
+      "description": "System of Record for this entity"
+    },
+    "title": {
+      "type": "string",
+      "description": "Extracted title/body after removing params"
+    },
+    "params": {
+      "type": "object",
+      "description": "Key-value params extracted from /key=value patterns",
+      "additionalProperties": { "type": "string" }
+    },
+    "parse_ok": {
+      "type": "boolean",
+      "description": "true if parsing succeeded and required fields are present"
+    },
+    "parse_error": {
+      "type": "string",
+      "description": "Error reason if parse_ok is false",
+      "enum": ["", "non_text_message", "unknown_prefix", "empty_title"]
+    }
+  }
+}

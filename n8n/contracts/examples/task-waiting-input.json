@@ -1,0 +1,16 @@
+{
+  "event_id": "01JRZK4M0G8N3PQRSTVWXY5679",
+  "source_system": "telegram",
+  "source_id": "tg_6526468834_12346",
+  "chat_id": 6526468834,
+  "message_id": 12346,
+  "received_at": "2026-04-10T14:31:00.000Z",
+  "raw_text": "f: Antwort von Max /due=2026-04-14",
+  "command": "followup",
+  "entity_type": "followup.create",
+  "target_system": "google_tasks",
+  "title": "Antwort von Max",
+  "params": { "due": "2026-04-14" },
+  "parse_ok": true,
+  "parse_error": ""
+}

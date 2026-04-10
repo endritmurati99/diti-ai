@@ -1,0 +1,213 @@
+{
+  "name": "P1-telegram-knowledge-draft-v1",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "sub-wf-trigger",
+      "name": "Sub-Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": ""
+          },
+          "conditions": [
+            {
+              "id": "validate-parse-ok",
+              "leftValue": "={{ $json.parse_ok }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "validate-title",
+      "name": "Validate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = items[0].json;\nconst date = new Date().toISOString().split('T')[0];\nconst title = item.title || 'Unbenannt';\nconst safeName = title.replace(/[^a-zA-Z0-9\\u00E4\\u00F6\\u00FC\\u00C4\\u00D6\\u00DC\\u00DF\\s\\-_]/g, '');\nconst filename = date + ' - ' + safeName.substring(0, 80) + '.md';\n\nconst lines = [\n  '---',\n  'id: ' + item.event_id,\n  'date: ' + date,\n  'source: telegram',\n  'source_id: msg_' + item.message_id,\n  'topic: ' + (item.params.topic || ''),\n  'project_id: ' + (item.params.project || item.params.p || ''),\n  'status: draft',\n  'review_state: pending',\n  'tags:',\n  '  - knowledge',\n  '  - inbox',\n  '---',\n  '',\n  '# ' + title,\n  '',\n  '> [!info] Quelle',\n  '> ' + (item.params.src || 'telegram'),\n  '',\n  '## Notizen',\n  '',\n  '- ',\n  '',\n  '## Naechste Schritte',\n  '',\n  '- [ ] Review und finalisieren',\n  ''\n];\nconst content = lines.join('\\n');\n\nreturn [{ json: {\n  filename: filename,\n  content: content,\n  filepath: '/data/obsidian-vault/00_INBOX/' + filename,\n  chat_id: item.chat_id,\n  title: item.title\n} }];"
+      },
+      "id": "build-markdown",
+      "name": "Build Markdown",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $json.filepath }}",
+        "dataPropertyName": "data"
+      },
+      "id": "write-obsidian",
+      "name": "Write to Obsidian",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        960,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1",
+              "name": "chat_id",
+              "value": "={{ $(\"Build Markdown\").first().json.chat_id }}",
+              "type": "number"
+            },
+            {
+              "id": "a2",
+              "name": "reply_text",
+              "value": "={{ \"\\uD83D\\uDCDD Knowledge Draft erstellt: \" + $(\"Build Markdown\").first().json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "a3",
+              "name": "reply_parse_mode",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "build-success-reply",
+      "name": "Build Success Reply",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1",
+              "name": "chat_id",
+              "value": "={{ $json.chat_id }}",
+              "type": "number"
+            },
+            {
+              "id": "a2",
+              "name": "reply_text",
+              "value": "⚠️ Kein Titel. Beispiel: k: Idee für Telegram",
+              "type": "string"
+            },
+            {
+              "id": "a3",
+              "name": "reply_parse_mode",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "build-error-reply",
+      "name": "Build Error Reply",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        440
+      ]
+    }
+  ],
+  "connections": {
+    "Sub-Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Validate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate": {
+      "main": [
+        [
+          {
+            "node": "Build Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Error Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Markdown": {
+      "main": [
+        [
+          {
+            "node": "Write to Obsidian",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write to Obsidian": {
+      "main": [
+        [
+          {
+            "node": "Build Success Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "name": "diti-ai"
+    },
+    {
+      "name": "phase-1"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "event_id": "01JRZK4M0G8N3PQRSTVWXY5681",
+  "source_system": "telegram",
+  "source_id": "tg_6526468834_12348",
+  "chat_id": 6526468834,
+  "message_id": 12348,
+  "received_at": "2026-04-10T14:33:00.000Z",
+  "raw_text": "q: free 2026-04-18 /window=09:00-17:00 /tz=Europe/Berlin",
+  "command": "calendar_query",
+  "entity_type": "calendar.query",
+  "target_system": "google_calendar",
+  "title": "free 2026-04-18",
+  "params": { "window": "09:00-17:00", "tz": "Europe/Berlin" },
+  "parse_ok": true,
+  "parse_error": ""
+}
