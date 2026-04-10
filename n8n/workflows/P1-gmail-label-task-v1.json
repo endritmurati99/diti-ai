@@ -1,5 +1,6 @@
 {
   "name": "P1-gmail-label-task-v1",
+  "id": "qyLExLjeBXZ4nd2Y",
   "nodes": [
     {
       "parameters": {
@@ -17,7 +18,7 @@
       "position": [250, 300],
       "credentials": {
         "gmailOAuth2": {
-          "id": "GOOGLE_CREDENTIAL_ID",
+          "id": "RyGiW81kWqp5gk2m",
           "name": "Google OAuth2"
         }
       }
@@ -47,7 +48,7 @@
       "position": [710, 300],
       "credentials": {
         "googleTasksOAuth2Api": {
-          "id": "GOOGLE_CREDENTIAL_ID",
+          "id": "s305fscwssjI56L7",
           "name": "Google OAuth2"
         }
       }
@@ -67,7 +68,7 @@
       "position": [940, 300],
       "credentials": {
         "gmailOAuth2": {
-          "id": "GOOGLE_CREDENTIAL_ID",
+          "id": "RyGiW81kWqp5gk2m",
           "name": "Google OAuth2"
         }
       }
@@ -85,7 +86,7 @@
       "position": [1170, 300],
       "credentials": {
         "telegramApi": {
-          "id": "TELEGRAM_CREDENTIAL_ID",
+          "id": "ArH28ZVfcRNFvTiN",
           "name": "Telegram Bot"
         }
       }

@@ -43,6 +43,7 @@ The primary input interface. Parsed by [n8n/api/command-parser.js](n8n/api/comma
 | `w:` | Workout log | Notion Health DB |
 | `m:` | Meeting note | Obsidian `00_INBOX/` |
 | `h:` | Health data | Notion Health DB |
+| `j:` | Journal (Stateless) | Obsidian `60_REVIEWS/` |
 
 Parameters use `/key=value` syntax, e.g. `t: Buy milk /p=high /due=2026-04-03`.
 

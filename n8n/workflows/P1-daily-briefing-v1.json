@@ -1,5 +1,6 @@
 {
   "name": "P1-daily-briefing-v1",
+  "id": "EqbptnAergDmhJK2",
   "nodes": [
     {
       "parameters": {
@@ -31,7 +32,7 @@
       "position": [480, 200],
       "credentials": {
         "googleTasksOAuth2Api": {
-          "id": "GOOGLE_CREDENTIAL_ID",
+          "id": "s305fscwssjI56L7",
           "name": "Google OAuth2"
         }
       }
@@ -57,7 +58,7 @@
       "position": [480, 420],
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "GOOGLE_CREDENTIAL_ID",
+          "id": "G8VazmuTBZl1HQGQ",
           "name": "Google OAuth2"
         }
       }
@@ -87,7 +88,7 @@
       "position": [980, 300],
       "credentials": {
         "telegramApi": {
-          "id": "TELEGRAM_CREDENTIAL_ID",
+          "id": "ArH28ZVfcRNFvTiN",
           "name": "Telegram Bot"
         }
       }

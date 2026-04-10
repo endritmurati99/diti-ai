@@ -1,5 +1,6 @@
 {
   "name": "P1-telegram-intake-v1",
+  "id": "fQvWw7CyAbhRQ86g",
   "nodes": [
     {
       "parameters": {
@@ -17,7 +18,7 @@
       ],
       "credentials": {
         "telegramApi": {
-          "id": "TELEGRAM_CREDENTIAL_ID",
+          "id": "ArH28ZVfcRNFvTiN",
           "name": "Telegram Bot"
         }
       }
@@ -89,7 +90,7 @@
       ],
       "credentials": {
         "googleTasksOAuth2Api": {
-          "id": "GOOGLE_CREDENTIAL_ID",
+          "id": "s305fscwssjI56L7",
           "name": "Google OAuth2"
         }
       }
@@ -113,7 +114,7 @@
       ],
       "credentials": {
         "googleTasksOAuth2Api": {
-          "id": "GOOGLE_CREDENTIAL_ID",
+          "id": "s305fscwssjI56L7",
           "name": "Google OAuth2"
         }
       }
@@ -174,7 +175,7 @@
       ],
       "credentials": {
         "telegramApi": {
-          "id": "TELEGRAM_CREDENTIAL_ID",
+          "id": "ArH28ZVfcRNFvTiN",
           "name": "Telegram Bot"
         }
       }

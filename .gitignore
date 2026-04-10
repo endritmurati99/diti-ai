@@ -1,5 +1,6 @@
 # Environment
 .env
+config/.env
 .env.local
 .env.production
 
@@ -11,6 +12,9 @@ obsidian-vault/.trash/
 # n8n credentials (never commit)
 n8n/*.credentials
 n8n/*.enc
+
+# n8n event logs (runtime data)
+n8n/logs/*.jsonl
 
 # OS
 .DS_Store

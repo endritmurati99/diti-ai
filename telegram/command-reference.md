@@ -115,6 +115,24 @@ h: nutrition kcal=2100 protein=140
 
 **Ziel:** Notion Health DB
 
+---
+
+### `j:` — Journal-Eintrag (Stateless)
+
+```
+j: Heute war ein produktiver Tag. Habe das n8n Setup fertiggestellt...
+```
+
+| Parameter | Pflicht | Beschreibung |
+|-----------|---------|-------------|
+| Text | Ja | Freitext-Reflexion |
+
+**Ziel:** Obsidian `60_REVIEWS/YYYY-MM-DD - Daily Note.md`
+
+> [!tip] Stateless Design
+> Der 21:00 Uhr Reminder sendet nur einen Push. Die Antwort erfolgt via `j:` Prefix —
+> kein Wait-Node, kein State-Verlust bei Docker-Restart.
+
 ## Verarbeitungslogik
 
 ```mermaid
@@ -127,7 +145,8 @@ graph TD
     B -->|w:| G[Workout -> Notion Health DB]
     B -->|m:| H[Meeting Note -> Obsidian INBOX]
     B -->|h:| I[Health Daten -> Notion Health DB]
-    B -->|Freitext| J[LLM Parser -> Intent erkennen]
+    B -->|j:| N[Journal -> Obsidian REVIEWS]
+    B -->|Freitext| J[AI Agent -> Intent erkennen]
     J --> K{Intent Confidence >0.8?}
     K -->|Ja| L[Routing wie oben]
     K -->|Nein| M[Rueckfrage an User]

@@ -1,6 +1,10 @@
 /**
  * Diti AI — Command Parser fuer n8n Code Node
  *
+ * HINWEIS: Dies ist eine Referenz-Kopie. Der produktive Code lebt
+ * inline im n8n Workflow JSON (P1-telegram-intake-v1.json).
+ * Aenderungen hier muessen manuell in den Workflow uebertragen werden.
+ *
  * Parst Telegram-Nachrichten im DSL-Format:
  *   t: Titel /due=2026-04-01 /prio=H /p=P1 /ctx=deepwork
  *   f: Follow-up /to=Person /due=2026-04-02
@@ -9,8 +13,8 @@
  *   w: workout run 45m rpe=7 /tags=intervals
  *   m: Meeting Titel /event=calendar
  *   h: sleep /note=schlecht | h: weigh=82.3 | h: nutrition kcal=2100
+ *   j: Mein Tag war produktiv... (Journal-Eintrag -> Obsidian 60_REVIEWS/)
  *
- * Kopiere diesen Code in einen n8n "Code" Node.
  * Input: items[0].json.message.text (Telegram Message)
  * Output: { command, title, params, event_envelope }
  */
@@ -45,7 +49,7 @@ function parseCommand(messageText) {
   const text = messageText.trim();
 
   // Command erkennen: t:, f:, k:, q:, w:, m:, h:
-  const commandMatch = text.match(/^([tfkqwmh]):\s*(.*)/is);
+  const commandMatch = text.match(/^([tfkqwmhj]):\s*(.*)/is);
 
   if (!commandMatch) {
     return { command: 'unknown', title: text, params: {}, raw: text };
@@ -78,6 +82,7 @@ function getRoutingDecision(command) {
     w: 'notion_health_db',
     m: 'obsidian_inbox',
     h: 'notion_health_db',
+    j: 'obsidian_reviews',
   };
   return routeMap[command] || 'unknown';
 }
@@ -92,6 +97,7 @@ function createEventEnvelope(parsed, sourceId) {
     w: 'workout.log',
     m: 'meeting.create',
     h: 'health.log',
+    j: 'journal.create',
     unknown: 'unknown',
   };
 
