@@ -1,16 +1,53 @@
 {
   "event_id": "01JRZK4M0G8N3PQRSTVWXY5678",
+  "event_type": "task.create",
   "source_system": "telegram",
   "source_id": "tg_6526468834_12345",
-  "chat_id": 6526468834,
-  "message_id": 12345,
-  "received_at": "2026-04-10T14:30:00.000Z",
-  "raw_text": "t: Rechnung senden /due=2026-04-12 /p=high",
+  "timestamp": "2026-04-10T14:30:00.000Z",
+  "actor": "user",
+  "payload": {
+    "ok": true,
+    "intent": "task.create",
+    "target_list": "NEXT",
+    "title": "Rechnung senden",
+    "items": [],
+    "params": {
+      "due": "2026-04-12",
+      "p": "high"
+    },
+    "confidence": 1,
+    "needs_confirmation": false
+  },
+  "routing_decision": "google_tasks",
+  "audit": {
+    "workflow_id": "P1-telegram-intake-v2",
+    "parser": "fast_lane",
+    "confidence": 1,
+    "invalid_params": []
+  },
+  "ok": true,
+  "intent": "task.create",
+  "title": "Rechnung senden",
+  "items": [],
+  "params": {
+    "due": "2026-04-12",
+    "p": "high"
+  },
+  "confidence": 1,
+  "needs_confirmation": false,
+  "target_list": "NEXT",
   "command": "task",
   "entity_type": "task.create",
   "target_system": "google_tasks",
-  "title": "Rechnung senden",
-  "params": { "due": "2026-04-12", "p": "high" },
   "parse_ok": true,
-  "parse_error": ""
+  "parse_error": "",
+  "chat_id": 6526468834,
+  "message_id": 12345,
+  "raw_text": "t: Rechnung senden /due=2026-04-12 /p=high",
+  "raw_message": {
+    "text": "t: Rechnung senden /due=2026-04-12 /p=high",
+    "message_id": 12345,
+    "chat": { "id": 6526468834 }
+  },
+  "received_at": "2026-04-10T14:30:00.000Z"
 }

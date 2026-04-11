@@ -1,4 +1,5 @@
 {
+  "id": "Jm3AB26MzUlxauV6",
   "name": "P1-telegram-knowledge-draft-v1",
   "nodes": [
     {
@@ -45,7 +46,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const item = items[0].json;\nconst date = new Date().toISOString().split('T')[0];\nconst title = item.title || 'Unbenannt';\nconst safeName = title.replace(/[^a-zA-Z0-9\\u00E4\\u00F6\\u00FC\\u00C4\\u00D6\\u00DC\\u00DF\\s\\-_]/g, '');\nconst filename = date + ' - ' + safeName.substring(0, 80) + '.md';\n\nconst lines = [\n  '---',\n  'id: ' + item.event_id,\n  'date: ' + date,\n  'source: telegram',\n  'source_id: msg_' + item.message_id,\n  'topic: ' + (item.params.topic || ''),\n  'project_id: ' + (item.params.project || item.params.p || ''),\n  'status: draft',\n  'review_state: pending',\n  'tags:',\n  '  - knowledge',\n  '  - inbox',\n  '---',\n  '',\n  '# ' + title,\n  '',\n  '> [!info] Quelle',\n  '> ' + (item.params.src || 'telegram'),\n  '',\n  '## Notizen',\n  '',\n  '- ',\n  '',\n  '## Naechste Schritte',\n  '',\n  '- [ ] Review und finalisieren',\n  ''\n];\nconst content = lines.join('\\n');\n\nreturn [{ json: {\n  filename: filename,\n  content: content,\n  filepath: '/data/obsidian-vault/00_INBOX/' + filename,\n  chat_id: item.chat_id,\n  title: item.title\n} }];"
+        "jsCode": "const item = items[0].json;\nconst date = new Date().toISOString().split('T')[0];\nconst title = item.title || 'Unbenannt';\nconst testRun = item.params && item.params.test_run ? item.params.test_run : '';\nconst basePath = testRun ? '/data/obsidian-vault/00_INBOX/_tests/' : '/data/obsidian-vault/00_INBOX/';\nconst safeName = title.replace(/[^a-zA-Z0-9\\u00E4\\u00F6\\u00FC\\u00C4\\u00D6\\u00DC\\u00DF\\s\\-_]/g, '');\nconst filename = date + ' - ' + safeName.substring(0, 80) + '.md';\n\nconst lines = [\n  '---',\n  'id: ' + item.event_id,\n  'date: ' + date,\n  'source: telegram',\n  'source_id: msg_' + item.message_id,\n  'test_run: ' + testRun,\n  'topic: ' + (item.params.topic || ''),\n  'project_id: ' + (item.params.project || item.params.p || ''),\n  'status: draft',\n  'review_state: pending',\n  'tags:',\n  '  - knowledge',\n  '  - inbox',\n  '---',\n  '',\n  '# ' + title,\n  '',\n  '> [!info] Quelle',\n  '> ' + (item.params.src || 'telegram'),\n  '',\n  '## Notizen',\n  '',\n  '- ',\n  '',\n  '## Naechste Schritte',\n  '',\n  '- [ ] Review und finalisieren',\n  ''\n];\nconst content = lines.join('\\n');\n\nreturn [{ json: {\n  filename: filename,\n  content: content,\n  filepath: basePath + filename,\n  chat_id: item.chat_id,\n  title: item.title,\n  test_run: testRun\n} }];"
       },
       "id": "build-markdown",
       "name": "Build Markdown",
@@ -94,6 +95,24 @@
               "name": "reply_parse_mode",
               "value": "",
               "type": "string"
+            },
+            {
+              "id": "a4",
+              "name": "note_path",
+              "value": "={{ $(\"Build Markdown\").first().json.filepath }}",
+              "type": "string"
+            },
+            {
+              "id": "a5",
+              "name": "note_filename",
+              "value": "={{ $(\"Build Markdown\").first().json.filename }}",
+              "type": "string"
+            },
+            {
+              "id": "a6",
+              "name": "test_run",
+              "value": "={{ $(\"Build Markdown\").first().json.test_run }}",
+              "type": "string"
             }
           ]
         },
@@ -123,7 +142,7 @@
             {
               "id": "a2",
               "name": "reply_text",
-              "value": "⚠️ Kein Titel. Beispiel: k: Idee für Telegram",
+              "value": "Kein Titel. Beispiel: k: Idee fuer Telegram",
               "type": "string"
             },
             {

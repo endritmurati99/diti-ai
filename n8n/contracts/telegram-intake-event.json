@@ -1,72 +1,190 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "TelegramIntakeEvent",
-  "description": "Canonical event envelope produced by P1-telegram-intake-v2 Normalize Event node",
+  "description": "Canonical envelope produced by P1-telegram-intake-v2 after Normalize Canonical Event",
   "type": "object",
-  "required": ["event_id", "source_system", "source_id", "chat_id", "command", "parse_ok"],
+  "required": [
+    "event_id",
+    "event_type",
+    "source_system",
+    "source_id",
+    "timestamp",
+    "actor",
+    "payload",
+    "routing_decision",
+    "audit",
+    "chat_id",
+    "command",
+    "intent",
+    "parse_ok"
+  ],
   "properties": {
     "event_id": {
       "type": "string",
-      "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
-      "description": "ULID generated at intake time"
+      "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "event_type": {
+      "type": "string"
     },
     "source_system": {
       "type": "string",
       "const": "telegram"
     },
     "source_id": {
+      "type": "string"
+    },
+    "timestamp": {
       "type": "string",
-      "description": "Composite key: tg_{chat_id}_{message_id}"
+      "format": "date-time"
     },
-    "chat_id": {
-      "type": "integer",
-      "description": "Telegram chat ID"
-    },
-    "message_id": {
-      "type": "integer",
-      "description": "Telegram message ID"
-    },
-    "received_at": {
+    "actor": {
       "type": "string",
-      "format": "date-time",
-      "description": "ISO 8601 timestamp of intake"
+      "enum": ["user", "agent"]
     },
-    "raw_text": {
-      "type": "string",
-      "description": "Original unmodified message text"
+    "payload": {
+      "type": "object",
+      "required": ["ok", "intent", "target_list", "title", "items", "params", "confidence", "needs_confirmation"],
+      "properties": {
+        "ok": { "type": "boolean" },
+        "intent": {
+          "type": "string",
+          "enum": [
+            "task.create",
+            "followup.create",
+            "knowledge.draft",
+            "calendar.query",
+            "shopping.add",
+            "workout.log",
+            "meeting.create",
+            "health.log",
+            "journal.create",
+            "help",
+            "ping",
+            "unknown"
+          ]
+        },
+        "target_list": { "type": "string" },
+        "title": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "due": { "type": "string" },
+            "project": { "type": "string" },
+            "p": { "type": "string" },
+            "prio": { "type": "string" },
+            "ctx": { "type": "string" },
+            "to": { "type": "string" },
+            "topic": { "type": "string" },
+            "src": { "type": "string" },
+            "window": { "type": "string" },
+            "tz": { "type": "string" },
+            "store": { "type": "string" },
+            "test_run": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "confidence": { "type": "number" },
+        "needs_confirmation": { "type": "boolean" }
+      },
+      "additionalProperties": false
     },
-    "command": {
-      "type": "string",
-      "enum": ["task", "followup", "knowledge", "calendar_query", "help", "ping", "unknown"],
-      "description": "Parsed command type"
+    "routing_decision": {
+      "type": "string"
     },
-    "entity_type": {
-      "type": "string",
-      "enum": ["task.create", "followup.create", "knowledge.draft", "calendar.query", ""],
-      "description": "Domain entity type"
+    "audit": {
+      "type": "object",
+      "required": ["workflow_id", "parser", "confidence", "invalid_params"],
+      "properties": {
+        "workflow_id": { "type": "string" },
+        "parser": { "type": "string" },
+        "confidence": { "type": "number" },
+        "invalid_params": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
     },
-    "target_system": {
+    "ok": { "type": "boolean" },
+    "intent": {
       "type": "string",
-      "enum": ["google_tasks", "obsidian", "google_calendar", ""],
-      "description": "System of Record for this entity"
+      "enum": [
+        "task.create",
+        "followup.create",
+        "knowledge.draft",
+        "calendar.query",
+        "shopping.add",
+        "workout.log",
+        "meeting.create",
+        "health.log",
+        "journal.create",
+        "help",
+        "ping",
+        "unknown"
+      ]
     },
-    "title": {
-      "type": "string",
-      "description": "Extracted title/body after removing params"
+    "title": { "type": "string" },
+    "items": {
+      "type": "array",
+      "items": { "type": "string" }
     },
     "params": {
       "type": "object",
-      "description": "Key-value params extracted from /key=value patterns",
-      "additionalProperties": { "type": "string" }
+      "properties": {
+        "due": { "type": "string" },
+        "project": { "type": "string" },
+        "p": { "type": "string" },
+        "prio": { "type": "string" },
+        "ctx": { "type": "string" },
+        "to": { "type": "string" },
+        "topic": { "type": "string" },
+        "src": { "type": "string" },
+        "window": { "type": "string" },
+        "tz": { "type": "string" },
+        "store": { "type": "string" },
+        "test_run": { "type": "string" }
+      },
+      "additionalProperties": false
     },
-    "parse_ok": {
-      "type": "boolean",
-      "description": "true if parsing succeeded and required fields are present"
-    },
-    "parse_error": {
+    "confidence": { "type": "number" },
+    "needs_confirmation": { "type": "boolean" },
+    "target_list": { "type": "string" },
+    "command": {
       "type": "string",
-      "description": "Error reason if parse_ok is false",
-      "enum": ["", "non_text_message", "unknown_prefix", "empty_title"]
+      "enum": [
+        "task",
+        "followup",
+        "knowledge",
+        "calendar_query",
+        "shopping",
+        "help",
+        "ping",
+        "workout",
+        "meeting",
+        "health",
+        "journal",
+        "unknown"
+      ]
+    },
+    "entity_type": { "type": "string" },
+    "target_system": {
+      "type": "string",
+      "enum": ["google_tasks", "obsidian", "google_calendar", "telegram", "notion", ""]
+    },
+    "parse_ok": { "type": "boolean" },
+    "parse_error": { "type": "string" },
+    "chat_id": { "type": "integer" },
+    "message_id": { "type": "integer" },
+    "raw_text": { "type": "string" },
+    "raw_message": { "type": "object" },
+    "received_at": {
+      "type": "string",
+      "format": "date-time"
     }
-  }
+  },
+  "additionalProperties": false
 }

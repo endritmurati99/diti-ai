@@ -1,4 +1,5 @@
 {
+  "id": "pzYSe2gnvbXLedvG",
   "name": "P1-telegram-task-next-v1",
   "nodes": [
     {
@@ -50,7 +51,7 @@
         "taskList": "NEXT",
         "title": "={{ $json.title }}",
         "dueDate": "={{ $json.params.due || \"\" }}",
-        "notes": "={{ \"Event: \" + $json.event_id + \"\\nProjekt: \" + ($json.params.p || \"-\") + \"\\nPrio: \" + ($json.params.prio || \"M\") + \"\\nKontext: \" + ($json.params.ctx || \"-\") }}"
+        "notes": "={{ \"Event: \" + $json.event_id + ($json.params.test_run ? \"\\nTestRun: \" + $json.params.test_run : \"\") + \"\\nProjekt: \" + ($json.params.p || \"-\") + \"\\nPrio: \" + ($json.params.prio || \"M\") + \"\\nKontext: \" + ($json.params.ctx || \"-\") }}"
       },
       "id": "create-task-next",
       "name": "Google Tasks: NEXT",
@@ -63,13 +64,13 @@
       "credentials": {
         "googleTasksOAuth2Api": {
           "id": "s305fscwssjI56L7",
-          "name": "Google Tasks account"
+          "name": "Google OAuth2"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "const ev = items[0].json;\nconst title = ev.title || $('Sub-Workflow Trigger').first().json.title || '';\nconst chat_id = $('Sub-Workflow Trigger').first().json.chat_id;\nreturn [{ json: {\n  chat_id: chat_id,\n  reply_text: '\\u2705 Task erstellt: ' + title,\n  reply_parse_mode: ''\n} }];"
+        "jsCode": "const ev = items[0].json;\nconst title = ev.title || $('Sub-Workflow Trigger').first().json.title || '';\nconst chat_id = $('Sub-Workflow Trigger').first().json.chat_id;\nconst test_run = ev.params && ev.params.test_run ? ev.params.test_run : '';\nconst task_list = test_run ? 'TEST_NEXT' : 'NEXT';\nreturn [{ json: {\n  chat_id: chat_id,\n  reply_text: 'Task erstellt: ' + title,\n  reply_parse_mode: '',\n  task_title: title,\n  task_list: task_list,\n  test_run: test_run\n} }];"
       },
       "id": "build-success-reply",
       "name": "Build Success Reply",
@@ -95,7 +96,7 @@
             {
               "id": "a2",
               "name": "reply_text",
-              "value": "⚠️ Kein Titel angegeben. Beispiel: t: Rechnung senden",
+              "value": "Kein Titel angegeben. Beispiel: t: Rechnung senden",
               "type": "string"
             },
             {

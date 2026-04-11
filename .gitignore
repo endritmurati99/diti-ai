@@ -23,3 +23,4 @@ desktop.ini
 
 # Node (falls spaeter relevant)
 node_modules/
+.claude/

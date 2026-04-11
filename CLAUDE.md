@@ -26,20 +26,22 @@ Every data type has exactly one authoritative system (see [config/sor-matrix.md]
 
 All workflows must emit events conforming to the canonical envelope in [config/event-envelope.md](config/event-envelope.md):
 
-- `event_id`: ULID (use the generator in `n8n/api/command-parser.js`)
+- `event_id`: ULID (generated within the Intake Workflow)
 - Deduplication: `{source_system, source_id}` pair must be idempotent
 - Event types follow `noun.verb` pattern: `task.create`, `knowledge.draft`, `workout.log`, etc.
 
 ## Telegram Command DSL
 
-The primary input interface. Parsed by [n8n/api/command-parser.js](n8n/api/command-parser.js):
+The primary input interface. Built dynamically via [n8n/scripts/generate-v2-workflows.js](n8n/scripts/generate-v2-workflows.js):
 
-| Prefix | Routes to | Target system |
+| Prefix / Cmd | Routes to | Target system |
 |--------|-----------|---------------|
 | `t:` | Task create | Google Tasks (NEXT list) |
 | `f:` | Follow-up | Google Tasks (WAITING list) |
 | `k:` | Knowledge | Obsidian `00_INBOX/` |
 | `q:` | Calendar query | Google Calendar freebusy |
+| `/ping` | Status Check | Telegram Reply |
+| `/help` | Command Help | Telegram Reply |
 | `w:` | Workout log | Notion Health DB |
 | `m:` | Meeting note | Obsidian `00_INBOX/` |
 | `h:` | Health data | Notion Health DB |
@@ -51,12 +53,19 @@ Parameters use `/key=value` syntax, e.g. `t: Buy milk /p=high /due=2026-04-03`.
 
 Workflow JSON files live in [n8n/workflows/](n8n/workflows/). Naming convention: `P{phase}-{name}-v{version}.json`.
 
-Current Phase 1 workflows:
-- `P1-telegram-intake-v1.json` — Telegram → parse DSL → route to SoR
+Current Phase 1 workflows (V2 Architecture):
+- `P1-telegram-intake-v2.json` — Telegram → Route to specialized sub-workflows via ID
+- `P1-telegram-task-next-v1.json` — Sub-workflow: Create Task
+- `P1-telegram-task-waiting-v1.json` — Sub-workflow: Create Follow-up
+- `P1-telegram-knowledge-draft-v1.json` — Sub-workflow: Write to Obsidian
+- `P1-telegram-calendar-query-v1.json` — Sub-workflow: Fetch Calendar Data
+- `P1-error-handler-v1.json` — Global error routing
 - `P1-gmail-label-task-v1.json` — Gmail "AI/TODO" label → Google Task
-- `P1-daily-briefing-v1.json` — Cron → top-3 tasks → Telegram
 
-To deploy workflows: run `n8n/api/deploy.sh` (requires `N8N_URL` and `N8N_API_KEY` in `.env`).
+To deploy or modify these workflows:
+1. Edit and run `node n8n/scripts/generate-v2-workflows.js` to create the JSON files.
+2. Use the wrapper `n8nctl.cmd workflow import <file>` or `n8nctl.cmd workflow activate <id>` to circumvent API issues.
+(See `AGENTS.md` for standard tooling and CLI references).
 
 ## Agent Roles
 

@@ -117,22 +117,28 @@ function createEventEnvelope(parsed, sourceId) {
   };
 }
 
+// --- Module exports (fuer Tests) ---
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { parseCommand, getRoutingDecision, createEventEnvelope, generateULID };
+}
+
 // --- n8n Code Node Entry Point ---
 // Diesen Block in den n8n Code Node kopieren
+if (typeof items !== 'undefined') {
+  const message = items[0].json.message || items[0].json;
+  const messageText = message.text || '';
+  const messageId = message.message_id || message.id || '';
+  const chatId = message.chat?.id || message.from?.id || '';
 
-const message = items[0].json.message || items[0].json;
-const messageText = message.text || '';
-const messageId = message.message_id || message.id || '';
-const chatId = message.chat?.id || message.from?.id || '';
+  const parsed = parseCommand(messageText);
+  const envelope = createEventEnvelope(parsed, 'msg_' + messageId);
 
-const parsed = parseCommand(messageText);
-const envelope = createEventEnvelope(parsed, 'msg_' + messageId);
-
-return [{
-  json: {
-    ...parsed,
-    chat_id: chatId,
-    message_id: messageId,
-    event_envelope: envelope,
-  }
-}];
+  return [{
+    json: {
+      ...parsed,
+      chat_id: chatId,
+      message_id: messageId,
+      event_envelope: envelope,
+    }
+  }];
+}

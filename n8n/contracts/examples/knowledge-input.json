@@ -1,16 +1,51 @@
 {
   "event_id": "01JRZK4M0G8N3PQRSTVWXY5680",
+  "event_type": "knowledge.draft",
   "source_system": "telegram",
   "source_id": "tg_6526468834_12347",
-  "chat_id": 6526468834,
-  "message_id": 12347,
-  "received_at": "2026-04-10T14:32:00.000Z",
-  "raw_text": "k: Idee für Telegram Intake",
+  "timestamp": "2026-04-10T14:32:00.000Z",
+  "actor": "user",
+  "payload": {
+    "ok": true,
+    "intent": "knowledge.draft",
+    "target_list": "",
+    "title": "Idee fuer Telegram Intake",
+    "items": [],
+    "params": {
+      "topic": "telegram"
+    },
+    "confidence": 1,
+    "needs_confirmation": false
+  },
+  "routing_decision": "obsidian",
+  "audit": {
+    "workflow_id": "P1-telegram-intake-v2",
+    "parser": "fast_lane",
+    "confidence": 1,
+    "invalid_params": []
+  },
+  "ok": true,
+  "intent": "knowledge.draft",
+  "title": "Idee fuer Telegram Intake",
+  "items": [],
+  "params": {
+    "topic": "telegram"
+  },
+  "confidence": 1,
+  "needs_confirmation": false,
+  "target_list": "",
   "command": "knowledge",
   "entity_type": "knowledge.draft",
   "target_system": "obsidian",
-  "title": "Idee für Telegram Intake",
-  "params": {},
   "parse_ok": true,
-  "parse_error": ""
+  "parse_error": "",
+  "chat_id": 6526468834,
+  "message_id": 12347,
+  "raw_text": "k: Idee fuer Telegram Intake /topic=telegram",
+  "raw_message": {
+    "text": "k: Idee fuer Telegram Intake /topic=telegram",
+    "message_id": 12347,
+    "chat": { "id": 6526468834 }
+  },
+  "received_at": "2026-04-10T14:32:00.000Z"
 }

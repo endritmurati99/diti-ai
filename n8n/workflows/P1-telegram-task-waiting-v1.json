@@ -1,4 +1,5 @@
 {
+  "id": "6d1fV8surkco100H",
   "name": "P1-telegram-task-waiting-v1",
   "nodes": [
     {
@@ -50,7 +51,7 @@
         "taskList": "WAITING",
         "title": "={{ \"WAITING: \" + $json.title }}",
         "dueDate": "={{ $json.params.due || \"\" }}",
-        "notes": "={{ \"Follow-up fuer: \" + ($json.params.to || \"-\") + \"\\nEvent: \" + $json.event_id }}"
+        "notes": "={{ \"Follow-up fuer: \" + ($json.params.to || \"-\") + \"\\nEvent: \" + $json.event_id + ($json.params.test_run ? \"\\nTestRun: \" + $json.params.test_run : \"\") }}"
       },
       "id": "create-task-waiting",
       "name": "Google Tasks: WAITING",
@@ -63,13 +64,13 @@
       "credentials": {
         "googleTasksOAuth2Api": {
           "id": "s305fscwssjI56L7",
-          "name": "Google Tasks account"
+          "name": "Google OAuth2"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "const ev = items[0].json;\nconst title = ev.title || $('Sub-Workflow Trigger').first().json.title || '';\nconst chat_id = $('Sub-Workflow Trigger').first().json.chat_id;\nreturn [{ json: {\n  chat_id: chat_id,\n  reply_text: '\\u23F3 Follow-up erstellt: ' + title,\n  reply_parse_mode: ''\n} }];"
+        "jsCode": "const ev = items[0].json;\nconst title = ev.title || $('Sub-Workflow Trigger').first().json.title || '';\nconst chat_id = $('Sub-Workflow Trigger').first().json.chat_id;\nconst test_run = ev.params && ev.params.test_run ? ev.params.test_run : '';\nconst task_list = test_run ? 'TEST_WAITING' : 'WAITING';\nreturn [{ json: {\n  chat_id: chat_id,\n  reply_text: 'Follow-up erstellt: ' + title,\n  reply_parse_mode: '',\n  task_title: 'WAITING: ' + title,\n  task_list: task_list,\n  test_run: test_run\n} }];"
       },
       "id": "build-success-reply",
       "name": "Build Success Reply",
@@ -95,7 +96,7 @@
             {
               "id": "a2",
               "name": "reply_text",
-              "value": "⚠️ Kein Titel angegeben. Beispiel: f: Antwort von Max",
+              "value": "Kein Titel angegeben. Beispiel: f: Antwort von Max",
               "type": "string"
             },
             {

@@ -1,4 +1,5 @@
 {
+  "id": "FLsNZCEhoqtwCbPG",
   "name": "P1-telegram-calendar-query-v1",
   "nodes": [
     {
@@ -59,7 +60,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const query = $('Parse Query Params').first().json;\nconst events = items.map(i => i.json);\nconst lines = ['\\uD83D\\uDCC5 Kalender ' + query.queryDate + ' (' + query.slotStart + '\\u2013' + query.slotEnd + ')'];\nlines.push('');\n\nif (events.length === 0 || (events.length === 1 && !events[0].summary)) {\n  lines.push('\\u2705 Keine Termine \\u2013 der Zeitraum ist frei.');\n} else {\n  lines.push('Termine:');\n  for (const ev of events) {\n    if (!ev.summary) continue;\n    const start = ev.start ? (ev.start.dateTime || ev.start.date || '?') : '?';\n    const end = ev.end ? (ev.end.dateTime || ev.end.date || '?') : '?';\n    const startTime = start.includes('T') ? start.split('T')[1].substring(0, 5) : start;\n    const endTime = end.includes('T') ? end.split('T')[1].substring(0, 5) : end;\n    lines.push('  \\u2022 ' + startTime + '\\u2013' + endTime + ' ' + ev.summary);\n  }\n}\n\nreturn [{ json: {\n  chat_id: query.chat_id,\n  reply_text: lines.join('\\n'),\n  reply_parse_mode: ''\n} }];"
+        "jsCode": "const query = $('Parse Query Params').first().json;\nconst events = items.map(i => i.json);\nconst lines = ['Kalender ' + query.queryDate + ' (' + query.slotStart + '-' + query.slotEnd + ')'];\nlines.push('');\n\nif (events.length === 0 || (events.length === 1 && !events[0].summary)) {\n  lines.push('Keine Termine - der Zeitraum ist frei.');\n} else {\n  lines.push('Termine:');\n  for (const ev of events) {\n    if (!ev.summary) continue;\n    const start = ev.start ? (ev.start.dateTime || ev.start.date || '?') : '?';\n    const end = ev.end ? (ev.end.dateTime || ev.end.date || '?') : '?';\n    const startTime = start.includes('T') ? start.split('T')[1].substring(0, 5) : start;\n    const endTime = end.includes('T') ? end.split('T')[1].substring(0, 5) : end;\n    lines.push('  - ' + startTime + '-' + endTime + ' ' + ev.summary);\n  }\n}\n\nreturn [{ json: {\n  chat_id: query.chat_id,\n  reply_text: lines.join('\\n'),\n  reply_parse_mode: ''\n} }];"
       },
       "id": "format-reply",
       "name": "Format Reply",
