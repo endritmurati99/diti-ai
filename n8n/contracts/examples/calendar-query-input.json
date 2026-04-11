@@ -1,0 +1,53 @@
+{
+  "event_id": "01JRZK4M0G8N3PQRSTVWXY5681",
+  "event_type": "calendar.query",
+  "source_system": "telegram",
+  "source_id": "tg_6526468834_12348",
+  "timestamp": "2026-04-10T14:33:00.000Z",
+  "actor": "user",
+  "payload": {
+    "ok": true,
+    "intent": "calendar.query",
+    "target_list": "",
+    "title": "free 2026-04-18",
+    "items": [],
+    "params": {
+      "window": "09:00-17:00",
+      "tz": "Europe/Berlin"
+    },
+    "confidence": 1,
+    "needs_confirmation": false
+  },
+  "routing_decision": "google_calendar",
+  "audit": {
+    "workflow_id": "P1-telegram-intake-v2",
+    "parser": "fast_lane",
+    "confidence": 1,
+    "invalid_params": []
+  },
+  "ok": true,
+  "intent": "calendar.query",
+  "title": "free 2026-04-18",
+  "items": [],
+  "params": {
+    "window": "09:00-17:00",
+    "tz": "Europe/Berlin"
+  },
+  "confidence": 1,
+  "needs_confirmation": false,
+  "target_list": "",
+  "command": "calendar_query",
+  "entity_type": "calendar.query",
+  "target_system": "google_calendar",
+  "parse_ok": true,
+  "parse_error": "",
+  "chat_id": 6526468834,
+  "message_id": 12348,
+  "raw_text": "q: free 2026-04-18 /window=09:00-17:00 /tz=Europe/Berlin",
+  "raw_message": {
+    "text": "q: free 2026-04-18 /window=09:00-17:00 /tz=Europe/Berlin",
+    "message_id": 12348,
+    "chat": { "id": 6526468834 }
+  },
+  "received_at": "2026-04-10T14:33:00.000Z"
+}

@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TelegramIntakeEvent",
+  "description": "Canonical envelope produced by P1-telegram-intake-v2 after Normalize Canonical Event",
+  "type": "object",
+  "required": [
+    "event_id",
+    "event_type",
+    "source_system",
+    "source_id",
+    "timestamp",
+    "actor",
+    "payload",
+    "routing_decision",
+    "audit",
+    "chat_id",
+    "command",
+    "intent",
+    "parse_ok"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "event_type": {
+      "type": "string"
+    },
+    "source_system": {
+      "type": "string",
+      "const": "telegram"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "actor": {
+      "type": "string",
+      "enum": ["user", "agent"]
+    },
+    "payload": {
+      "type": "object",
+      "required": ["ok", "intent", "target_list", "title", "items", "params", "confidence", "needs_confirmation"],
+      "properties": {
+        "ok": { "type": "boolean" },
+        "intent": {
+          "type": "string",
+          "enum": [
+            "task.create",
+            "followup.create",
+            "knowledge.draft",
+            "calendar.query",
+            "shopping.add",
+            "workout.log",
+            "meeting.create",
+            "health.log",
+            "journal.create",
+            "help",
+            "ping",
+            "unknown"
+          ]
+        },
+        "target_list": { "type": "string" },
+        "title": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "due": { "type": "string" },
+            "project": { "type": "string" },
+            "p": { "type": "string" },
+            "prio": { "type": "string" },
+            "ctx": { "type": "string" },
+            "to": { "type": "string" },
+            "topic": { "type": "string" },
+            "src": { "type": "string" },
+            "window": { "type": "string" },
+            "tz": { "type": "string" },
+            "store": { "type": "string" },
+            "test_run": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "confidence": { "type": "number" },
+        "needs_confirmation": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "routing_decision": {
+      "type": "string"
+    },
+    "audit": {
+      "type": "object",
+      "required": ["workflow_id", "parser", "confidence", "invalid_params"],
+      "properties": {
+        "workflow_id": { "type": "string" },
+        "parser": { "type": "string" },
+        "confidence": { "type": "number" },
+        "invalid_params": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ok": { "type": "boolean" },
+    "intent": {
+      "type": "string",
+      "enum": [
+        "task.create",
+        "followup.create",
+        "knowledge.draft",
+        "calendar.query",
+        "shopping.add",
+        "workout.log",
+        "meeting.create",
+        "health.log",
+        "journal.create",
+        "help",
+        "ping",
+        "unknown"
+      ]
+    },
+    "title": { "type": "string" },
+    "items": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "params": {
+      "type": "object",
+      "properties": {
+        "due": { "type": "string" },
+        "project": { "type": "string" },
+        "p": { "type": "string" },
+        "prio": { "type": "string" },
+        "ctx": { "type": "string" },
+        "to": { "type": "string" },
+        "topic": { "type": "string" },
+        "src": { "type": "string" },
+        "window": { "type": "string" },
+        "tz": { "type": "string" },
+        "store": { "type": "string" },
+        "test_run": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "confidence": { "type": "number" },
+    "needs_confirmation": { "type": "boolean" },
+    "target_list": { "type": "string" },
+    "command": {
+      "type": "string",
+      "enum": [
+        "task",
+        "followup",
+        "knowledge",
+        "calendar_query",
+        "shopping",
+        "help",
+        "ping",
+        "workout",
+        "meeting",
+        "health",
+        "journal",
+        "unknown"
+      ]
+    },
+    "entity_type": { "type": "string" },
+    "target_system": {
+      "type": "string",
+      "enum": ["google_tasks", "obsidian", "google_calendar", "telegram", "notion", ""]
+    },
+    "parse_ok": { "type": "boolean" },
+    "parse_error": { "type": "string" },
+    "chat_id": { "type": "integer" },
+    "message_id": { "type": "integer" },
+    "raw_text": { "type": "string" },
+    "raw_message": { "type": "object" },
+    "received_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}
