@@ -60,5 +60,6 @@ Details: `docs/rollout-phases.md`
 
 ## Architektur
 
-Vollstaendige Beschreibung: `Diti_AI_description.md`
 Kompakte Uebersicht: `docs/architecture-overview.md`
+Sicherheitsmodell: `docs/security-model.md`
+Roadmap: `docs/rollout-phases.md`

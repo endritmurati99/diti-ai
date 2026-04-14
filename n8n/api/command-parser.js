@@ -2,7 +2,7 @@
  * Diti AI — Command Parser fuer n8n Code Node
  *
  * HINWEIS: Dies ist eine Referenz-Kopie. Der produktive Code lebt
- * inline im n8n Workflow JSON (P1-telegram-intake-v1.json).
+ * inline im n8n Workflow JSON (P1-telegram-intake-v2.json).
  * Aenderungen hier muessen manuell in den Workflow uebertragen werden.
  *
  * Parst Telegram-Nachrichten im DSL-Format:

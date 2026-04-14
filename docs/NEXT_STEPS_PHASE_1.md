@@ -17,7 +17,8 @@ Die Verzeichnisstrukturen für Obsidian, n8n und Notion stehen. Die `.env`-Datei
   - [ ] **Notion API** in n8n anlegen (Internal Integration Token).
   - [ ] Die vergebenen Credential-IDs in die `.env` eintragen (falls zutreffend).
 - [ ] **Schritt 4: n8n Workflows verknüpfen**
-  - [ ] Wir laden die drei Workflows (`P1-daily-briefing-v1.json`, `P1-gmail-label-task-v1.json`, `P1-telegram-intake-v1.json`) ins n8n.
+  - [ ] Wir laden die Workflows (`P1-daily-briefing-v1.json`, `P1-gmail-label-task-v1.json`, `P1-telegram-intake-v2.json`) ins n8n.
+  - [ ] Danach aktivieren wir die zugehoerigen Sub-Workflows (`P1-telegram-task-next-v1.json`, `P1-telegram-task-waiting-v1.json`, `P1-telegram-knowledge-draft-v1.json`, `P1-telegram-calendar-query-v1.json`, `P1-error-handler-v1.json`).
   - [ ] Wir testen die Nodes und verknüpfen die erstellten Credentials.
 - [ ] **Schritt 5: Notion Datenbanken verknüpfen**
   - [ ] In Notion die entsprechenden Datenbanken (Projects, Habits, Task Mirror) mit der "Diti AI" Integration teilen.
