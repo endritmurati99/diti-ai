@@ -34,7 +34,7 @@ tags:
 ## Konventionen
 
 - Jeder Workflow hat eine eindeutige ID (n8n generiert)
-- Workflow-Name: `[Phase]-[Kurzname]-v[Version]` (z.B. `P1-telegram-intake-v1`)
+- Workflow-Name: `[Phase]-[Kurzname]-v[Version]` (z.B. `P1-telegram-intake-v2`)
 - JSON-Export liegt unter `n8n/workflows/`
 - Jeder Workflow muss Logging haben (mindestens `event_id` + `timestamp`)
 - Fehler landen in Dead-letter Queue (Notion Ops/Errors)
