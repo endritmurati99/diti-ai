@@ -48,7 +48,7 @@
       "parameters": {
         "resource": "task",
         "operation": "create",
-        "task": "={{ $json.resolved_task_list || ($json.params.test_run ? \"Uk1USUZvSldsYWJTamRtTA\" : \"WAITING\") }}",
+        "taskList": "={{ $json.resolved_task_list || ($json.params.test_run ? \"WAITING_TEST\" : \"WAITING\") }}",
         "title": "={{ \"WAITING: \" + $json.title }}",
         "dueDate": "={{ $json.params.due || \"\" }}",
         "notes": "={{ \"Follow-up fuer: \" + ($json.params.to || \"-\") + \"\\nEvent: \" + $json.event_id + ($json.params.test_run ? \"\\nTestRun: \" + $json.params.test_run : \"\") }}"

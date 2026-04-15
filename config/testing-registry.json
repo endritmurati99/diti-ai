@@ -1,0 +1,157 @@
+{
+  "schema_version": 2,
+  "project_name": "diti-ai",
+  "intake_workflow": {
+    "name": "P1-telegram-intake-v2",
+    "id": "kqCxomzy3TWYSllH",
+    "test_webhook_path": "test-intake"
+  },
+  "required_workflows": [
+    {
+      "name": "P1-telegram-intake-v2",
+      "id": "kqCxomzy3TWYSllH",
+      "must_be_active": true
+    },
+    {
+      "name": "P1-telegram-router-v1",
+      "id": "2Ckdfk7HHSRFnQoh",
+      "must_be_active": true
+    },
+    {
+      "name": "P1-telegram-task-next-v1",
+      "id": "pzYSe2gnvbXLedvG",
+      "must_be_active": true
+    },
+    {
+      "name": "P1-telegram-task-waiting-v1",
+      "id": "6d1fV8surkco100H",
+      "must_be_active": true
+    },
+    {
+      "name": "P1-telegram-knowledge-draft-v1",
+      "id": "Jm3AB26MzUlxauV6",
+      "must_be_active": true
+    },
+    {
+      "name": "P1-telegram-calendar-query-v1",
+      "id": "FLsNZCEhoqtwCbPG",
+      "must_be_active": true
+    },
+    {
+      "name": "P1-error-handler-v1",
+      "id": "ezKkyglJhrTwPi8n",
+      "must_be_active": true
+    }
+  ],
+  "required_credentials": [
+    {
+      "name": "Telegram account",
+      "type": "telegramApi"
+    },
+    {
+      "name": "Google Tasks account",
+      "type": "googleTasksOAuth2Api"
+    },
+    {
+      "name": "Google Calendar account",
+      "type": "googleCalendarOAuth2Api"
+    }
+  ],
+  "test_targets": {
+    "task_lists": {
+      "next": "N3V3OGpNaGY4MC0xYWN4Wg",
+      "waiting": "Uk1USUZvSldsYWJTamRtTA"
+    },
+    "vault_path": "00_INBOX_TEST/"
+  },
+  "test_calendar": "endrit.murati99@gmail.com",
+  "reply_nodes": {
+    "telegram_reply": "Telegram Reply",
+    "webhook_response": "Webhook Response"
+  },
+  "routing_expectations": {
+    "/ping": {
+      "expected_chain": [
+        "P1-telegram-intake-v2"
+      ]
+    },
+    "/help": {
+      "expected_chain": [
+        "P1-telegram-intake-v2"
+      ]
+    },
+    "q:": {
+      "expected_chain": [
+        "P1-telegram-intake-v2",
+        "P1-telegram-calendar-query-v1"
+      ]
+    },
+    "t:": {
+      "expected_chain": [
+        "P1-telegram-intake-v2",
+        "P1-telegram-task-next-v1"
+      ]
+    },
+    "f:": {
+      "expected_chain": [
+        "P1-telegram-intake-v2",
+        "P1-telegram-task-waiting-v1"
+      ]
+    },
+    "k:": {
+      "expected_chain": [
+        "P1-telegram-intake-v2",
+        "P1-telegram-knowledge-draft-v1"
+      ]
+    }
+  },
+  "batch_distribution": {
+    "total": 10000,
+    "commands": [
+      {
+        "prefix": "/ping",
+        "weight": 0.25,
+        "expected_workflow": "P1-telegram-intake-v2",
+        "writes": false
+      },
+      {
+        "prefix": "/help",
+        "weight": 0.25,
+        "expected_workflow": "P1-telegram-intake-v2",
+        "writes": false
+      },
+      {
+        "prefix": "q:",
+        "weight": 0.3,
+        "expected_workflow": "P1-telegram-calendar-query-v1",
+        "writes": false
+      },
+      {
+        "prefix": "t:",
+        "weight": 0.08,
+        "expected_workflow": "P1-telegram-task-next-v1",
+        "writes": true
+      },
+      {
+        "prefix": "f:",
+        "weight": 0.07,
+        "expected_workflow": "P1-telegram-task-waiting-v1",
+        "writes": true
+      },
+      {
+        "prefix": "k:",
+        "weight": 0.05,
+        "expected_workflow": "P1-telegram-knowledge-draft-v1",
+        "writes": true
+      }
+    ],
+    "test_prefix": "[TEST-{run_id}-{seq:05d}]",
+    "rate_per_second": 1.0,
+    "max_retries": 5,
+    "retry_base_timeout_seconds": 30
+  },
+  "safety": {
+    "allow_writes": true,
+    "allow_prod_targets": false
+  }
+}

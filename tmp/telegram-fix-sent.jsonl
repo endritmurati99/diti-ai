@@ -1,0 +1,41 @@
+{
+  "run_id": "batch-20260415T084414Z-8eba554c",
+  "seq": 1,
+  "transport": "telegram",
+  "status": "sent",
+  "sent_at": "2026-04-15T08:44:14.514372Z",
+  "prefix": "/ping",
+  "writes": false,
+  "text": "/ping",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "chat_id": 6526468834,
+  "message_id": 90,
+  "source_id": "tg_6526468834_90",
+  "test_run_id": "batch-20260415T084414Z-8eba554c-00001"
+}
+{
+  "run_id": "batch-20260415T084414Z-8eba554c",
+  "seq": 2,
+  "transport": "telegram",
+  "status": "sent",
+  "sent_at": "2026-04-15T08:44:15.514557Z",
+  "prefix": "q:",
+  "writes": false,
+  "text": "q: availability 2026-04-21 /window=09:00-12:00 /tz=UTC /test_run=batch-20260415T084414Z-8eba554c-00002",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "chat_id": 6526468834,
+  "message_id": 91,
+  "source_id": "tg_6526468834_91",
+  "test_run_id": "batch-20260415T084414Z-8eba554c-00002"
+}

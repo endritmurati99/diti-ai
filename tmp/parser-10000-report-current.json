@@ -1,0 +1,13 @@
+{
+  "generated_at": "2026-04-15T08:16:59.019Z",
+  "corpus_path": "C:\\Users\\endri\\Desktop\\Claude-Projects\\Diti AI\\tmp\\corpus-10000.jsonl",
+  "summary": {
+    "total": 10000,
+    "ok": 10000,
+    "parser_failures": 0,
+    "routing_failures": 0,
+    "write_safety_failures": 0,
+    "crashes": 0
+  },
+  "samples": []
+}

@@ -1,11 +1,17 @@
-# Diti AI: Nächste Schritte & To-Dos für Phase 1 MVP
+# Diti AI: Phase 1 Exit Criteria
 
-Dieses Dokument speichert unseren aktuellen Stand, damit wir beim nächsten Mal sofort da weitermachen können, wo wir aufgehört haben.
+Stand: April 14, 2026.
 
-## Aktueller Startpunkt
-Die Verzeichnisstrukturen für Obsidian, n8n und Notion stehen. Die `.env`-Datei in `config/.env` wurde aus dem Template erstellt.
+## What Is Implemented
 
-## To-Do Liste (Was beim nächsten Mal direkt ansteht)
+- Webhook-first batch testing is wired into the Diti intake generator and the reusable `cli-anything-n8n` harness.
+- `config/testing-registry.json` now uses schema v2 with dedicated test sinks and webhook metadata.
+- The intake workflow supports two ingress modes:
+  - Telegram for small transport smoke tests
+  - `test-intake` webhook for high-volume parser/router/load runs
+- Test writes are fail-closed to `NEXT_TEST`, `WAITING_TEST`, and `obsidian-vault/00_INBOX_TEST/`.
+
+## Setup Steps (Operator Checklist)
 
 - [ ] **Schritt 1: `.env` fertig befüllen**
   - [ ] Du öffnest `config/.env` und kopierst deine Tokens (Telegram Bot Token, Notion API Token) hinein.
@@ -27,4 +33,25 @@ Die Verzeichnisstrukturen für Obsidian, n8n und Notion stehen. Die `.env`-Datei
   - [ ] **Test Gmail:** Einer E-Mail das Label `AI/TODO` vergeben.
   - [ ] **Test Briefing:** Den Daily-Briefing-Workflow manuell in n8n anstoßen.
 
-Sobald wir diese Liste beim nächsten Mal abgehakt haben, ist das "Phase 1 MVP" deines Agentensystems live und funktionsfähig!
+## Phase 1 Verification Ladder
+
+- [ ] Runtime restore: `diti-n8n.cmd --json server health` returns success.
+- [ ] Runtime restore: `diti-n8n.cmd --json workflow list --active` returns the live active workflow set.
+- [ ] Preflight passes: `diti-n8n.cmd --json test preflight`
+- [ ] Parser proof: generate a 10k corpus and run `node n8n/scripts/test_parser.mjs --corpus <file> --out <report>`
+- [ ] Webhook proof: run `diti-n8n.cmd test batch-send --transport webhook --count 20`
+- [ ] Write-safety proof: run `diti-n8n.cmd test batch-send --transport webhook --count 100`
+- [ ] Telegram smoke: run `diti-n8n.cmd test batch-send --transport telegram --count 3`
+- [ ] Main stress run: run `diti-n8n.cmd test batch-send --transport webhook --count 10000`
+- [ ] Collection and reporting: `batch-collect` + `batch-report` produce both Markdown and JSON summaries
+
+## Hard Abort Conditions
+
+- [ ] Any test write lands in a production target
+- [ ] Any webhook test produces a Telegram side effect
+- [ ] Correlation failure rate exceeds 1% in the webhook proof stages
+- [ ] Expected-chain mismatches exceed 5% before the 10k webhook run
+
+## Current Blocker
+
+- `diti-n8n.cmd --json server health` is still failing against `http://localhost:5678/healthz`, so live-state re-verification is not complete yet.

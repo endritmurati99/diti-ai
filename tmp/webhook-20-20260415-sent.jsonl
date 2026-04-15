@@ -1,0 +1,350 @@
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 1,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.240249Z",
+  "prefix": "k:",
+  "writes": true,
+  "text": "k: [TEST-batch-20260415T081659Z-875df413-00001] Reiseunterlagen sammeln /topic=operations /src=voice",
+  "expected_command": "knowledge",
+  "expected_route": "P1-telegram-knowledge-draft-v1",
+  "expected_workflow": "P1-telegram-knowledge-draft-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-knowledge-draft-v1"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 2,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.240788Z",
+  "prefix": "t:",
+  "writes": true,
+  "text": "t: [TEST-batch-20260415T081659Z-875df413-00002] Einkauf planen quote semicolon drop table /due=2026-04-30 /prio=high /ctx=finance",
+  "expected_command": "task",
+  "expected_route": "P1-telegram-task-next-v1",
+  "expected_workflow": "P1-telegram-task-next-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-task-next-v1"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 3,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.241657Z",
+  "prefix": "/ping",
+  "writes": false,
+  "text": "/ping",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 4,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.242471Z",
+  "prefix": "q:",
+  "writes": false,
+  "text": "q: free 2026-04-18 /window=13:00-17:00 /tz=America/New_York",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 5,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.242908Z",
+  "prefix": "t:",
+  "writes": true,
+  "text": "t: [TEST-batch-20260415T081659Z-875df413-00005] Budget fuer Mai pruefen 日本語タスク /due=+7d /prio=M /ctx=work",
+  "expected_command": "task",
+  "expected_route": "P1-telegram-task-next-v1",
+  "expected_workflow": "P1-telegram-task-next-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-task-next-v1"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 7,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.243641Z",
+  "prefix": "f:",
+  "writes": true,
+  "text": "f: [TEST-batch-20260415T081659Z-875df413-00007] API-Dokumentation reviewen /to=Hausverwaltung /due=2026-04-20",
+  "expected_command": "followup",
+  "expected_route": "P1-telegram-task-waiting-v1",
+  "expected_workflow": "P1-telegram-task-waiting-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-task-waiting-v1"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 8,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.244051Z",
+  "prefix": "q:",
+  "writes": false,
+  "text": "q: availability 2026-04-21 /window=09:00-12:00 /tz=America/New_York",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 9,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.244504Z",
+  "prefix": "/help",
+  "writes": false,
+  "text": "/help",
+  "expected_command": "help",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 10,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.245018Z",
+  "prefix": "q:",
+  "writes": false,
+  "text": "q: free 2026-04-18 /window=10:00-16:00 /tz=America/New_York",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 6,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.243309Z",
+  "prefix": "q:",
+  "writes": false,
+  "text": "q: slots fuer morgen /window=10:00-16:00 /tz=Europe/Berlin",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 11,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.302104Z",
+  "prefix": "/help",
+  "writes": false,
+  "text": "/help",
+  "expected_command": "help",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 13,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.306381Z",
+  "prefix": "q:",
+  "writes": false,
+  "text": "q: termine 2026-04-30 /window=13:00-17:00 /tz=UTC",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 15,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.313698Z",
+  "prefix": "/ping",
+  "writes": false,
+  "text": "/ping",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 12,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.304641Z",
+  "prefix": "/help",
+  "writes": false,
+  "text": "/help",
+  "expected_command": "help",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 14,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.308358Z",
+  "prefix": "/help",
+  "writes": false,
+  "text": "/help",
+  "expected_command": "help",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 19,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.322008Z",
+  "prefix": "/ping",
+  "writes": false,
+  "text": "/ping",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 18,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.319027Z",
+  "prefix": "q:",
+  "writes": false,
+  "text": "q: slots fuer morgen /window=09:00-12:00 /tz=America/New_York",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 16,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.315171Z",
+  "prefix": "/ping",
+  "writes": false,
+  "text": "/ping",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 17,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.316844Z",
+  "prefix": "/help",
+  "writes": false,
+  "text": "/help",
+  "expected_command": "help",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}
+{
+  "run_id": "batch-20260415T081659Z-875df413",
+  "seq": 20,
+  "transport": "webhook",
+  "status": "failed",
+  "sent_at": "2026-04-15T08:16:59.339685Z",
+  "prefix": "/ping",
+  "writes": false,
+  "text": "/ping",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "error": "Webhook request failed with HTTP 404: {\"code\":404,\"message\":\"The requested webhook \\\"POST test-intake\\\" is not registered.\",\"hint\":\"The workflow must be active for a production URL to run successfully. You can activate the workflow using the toggle in the top-right of the editor. Note that unlike test URL calls, production URL calls aren't shown on the canvas (only in the executions list)\"}"
+}

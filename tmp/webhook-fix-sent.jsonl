@@ -1,0 +1,92 @@
+{
+  "run_id": "batch-20260415T084406Z-825e46ce",
+  "seq": 3,
+  "transport": "webhook",
+  "status": "sent",
+  "sent_at": "2026-04-15T08:44:06.669004Z",
+  "prefix": "/ping",
+  "writes": false,
+  "text": "/ping",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "source_id": "test_batch-20260415T084406Z-825e46ce_00003",
+  "chat_id": 0,
+  "message_id": 3,
+  "test_run_id": "batch-20260415T084406Z-825e46ce-00003",
+  "response_status": 200,
+  "response_body": {
+    "status": "ok",
+    "source_id": "",
+    "run_id": null,
+    "seq": null,
+    "reply_text": "ok - telegram intake aktiv",
+    "parse_error": "",
+    "write_safety_error": "",
+    "task_list": "",
+    "note_path": "",
+    "transport": "webhook"
+  },
+  "webhook_url": "http://localhost:5678/webhook/kqCxomzy3TWYSllH/test-webhook/test-intake"
+}
+{
+  "run_id": "batch-20260415T084406Z-825e46ce",
+  "seq": 1,
+  "transport": "webhook",
+  "status": "sent",
+  "sent_at": "2026-04-15T08:44:06.667876Z",
+  "prefix": "/help",
+  "writes": false,
+  "text": "/help",
+  "expected_command": "help",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "source_id": "test_batch-20260415T084406Z-825e46ce_00001",
+  "chat_id": 0,
+  "message_id": 1,
+  "test_run_id": "batch-20260415T084406Z-825e46ce-00001",
+  "response_status": 200,
+  "response_body": {
+    "status": "ok",
+    "source_id": "",
+    "run_id": null,
+    "seq": null,
+    "reply_text": "Command-Uebersicht\\n\\n/ping - Bot-Test\\n/help - Diese Hilfe\\n/start - Alias fuer /help\\n\\nDSL Fast Lane:\\nt: Titel /due=YYYY-MM-DD\\nf: Titel /due=YYYY-MM-DD\\nk: Titel\\nq: free YYYY-MM-DD /window=09:00-17:00 /tz=Europe/Berlin\\n\\nNatuerliche Sprache:\\nMilch, Eier und Brot kaufen\\n\\nBeispiele:\\nt: Rechnung senden /due=2026-04-12\\nf: Antwort von Max /due=2026-04-14\\nk: Idee fuer Telegram Intake\\nq: free 2026-04-18 /window=09:00-17:00 /tz=Europe/Berlin",
+    "parse_error": "",
+    "write_safety_error": "",
+    "task_list": "",
+    "note_path": "",
+    "transport": "webhook"
+  },
+  "webhook_url": "http://localhost:5678/webhook/kqCxomzy3TWYSllH/test-webhook/test-intake"
+}
+{
+  "run_id": "batch-20260415T084406Z-825e46ce",
+  "seq": 2,
+  "transport": "webhook",
+  "status": "sent",
+  "sent_at": "2026-04-15T08:44:06.668599Z",
+  "prefix": "q:",
+  "writes": false,
+  "text": "q: free 2026-04-18 /window=09:00-12:00 /tz=UTC",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "source_id": "test_batch-20260415T084406Z-825e46ce_00002",
+  "chat_id": 0,
+  "message_id": 2,
+  "test_run_id": "batch-20260415T084406Z-825e46ce-00002",
+  "response_status": 200,
+  "response_body": "",
+  "webhook_url": "http://localhost:5678/webhook/kqCxomzy3TWYSllH/test-webhook/test-intake"
+}

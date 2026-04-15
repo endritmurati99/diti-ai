@@ -1,0 +1,335 @@
+{
+  "updatedAt": "2026-04-14T19:58:31.524Z",
+  "createdAt": "2026-04-10T16:17:29.167Z",
+  "id": "pzYSe2gnvbXLedvG",
+  "name": "P1-telegram-task-next-v1",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "sub-wf-trigger",
+      "name": "Sub-Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": ""
+          },
+          "conditions": [
+            {
+              "id": "validate-parse-ok",
+              "leftValue": "={{ $json.parse_ok }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "validate-title",
+      "name": "Validate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "task",
+        "operation": "create",
+        "taskList": "={{ $json.resolved_task_list || ($json.params.test_run ? \"NEXT_TEST\" : \"NEXT\") }}",
+        "title": "={{ $json.title }}",
+        "dueDate": "={{ $json.params.due || \"\" }}",
+        "notes": "={{ \"Event: \" + $json.event_id + ($json.params.test_run ? \"\\nTestRun: \" + $json.params.test_run : \"\") + \"\\nProjekt: \" + ($json.params.p || \"-\") + \"\\nPrio: \" + ($json.params.prio || \"M\") + \"\\nKontext: \" + ($json.params.ctx || \"-\") }}"
+      },
+      "id": "create-task-next",
+      "name": "Google Tasks: NEXT",
+      "type": "n8n-nodes-base.googleTasks",
+      "typeVersion": 1,
+      "position": [
+        720,
+        200
+      ],
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "s305fscwssjI56L7",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const current = items[0].json || {};\nconst upstream = $('Sub-Workflow Trigger').first().json || {};\nconst event = { ...upstream, ...current };\nconst source = event.source || event.source_system || 'telegram';\nreturn [{ json: {\n  chat_id: Number.isFinite(Number(event.chat_id)) ? Number(event.chat_id) : 0,\n  reply_text: 'Task erstellt: ' + (event.title || ''),\n  reply_parse_mode: '',\n  source: source,\n  source_system: event.source_system || source,\n  source_id: event.source_id || '',\n  is_test: Boolean(event.is_test),\n  run_id: event.run_id || null,\n  seq: event.seq || null,\n  expected_route: event.expected_route || '',\n  expected_chain: Array.isArray(event.expected_chain) ? event.expected_chain : [],\n  parse_error: event.parse_error || '',\n  write_safety_error: event.write_safety_error || '',\n  reply_transport: event.reply_transport || (source === 'telegram' ? 'telegram' : 'webhook'),\n  should_telegram_reply: event.should_telegram_reply === true || source === 'telegram',\n  test_run: event.test_run_id || (event.params && event.params.test_run) || '',\n  task_title: event.title || '',\n  task_list: event.resolved_task_list || 'NEXT',\n} }];"
+      },
+      "id": "build-success-reply",
+      "name": "Build Success Reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const current = items[0].json || {};\nconst upstream = $('Sub-Workflow Trigger').first().json || {};\nconst event = { ...upstream, ...current };\nconst source = event.source || event.source_system || 'telegram';\nreturn [{ json: {\n  chat_id: Number.isFinite(Number(event.chat_id)) ? Number(event.chat_id) : 0,\n  reply_text: 'Kein Titel angegeben. Beispiel: t: Rechnung senden',\n  reply_parse_mode: '',\n  source: source,\n  source_system: event.source_system || source,\n  source_id: event.source_id || '',\n  is_test: Boolean(event.is_test),\n  run_id: event.run_id || null,\n  seq: event.seq || null,\n  expected_route: event.expected_route || '',\n  expected_chain: Array.isArray(event.expected_chain) ? event.expected_chain : [],\n  parse_error: event.parse_error || '',\n  write_safety_error: event.write_safety_error || '',\n  reply_transport: event.reply_transport || (source === 'telegram' ? 'telegram' : 'webhook'),\n  should_telegram_reply: event.should_telegram_reply === true || source === 'telegram',\n  test_run: event.test_run_id || (event.params && event.params.test_run) || '',\n} }];"
+      },
+      "id": "build-error-reply",
+      "name": "Build Error Reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        440
+      ]
+    }
+  ],
+  "connections": {
+    "Sub-Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Validate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate": {
+      "main": [
+        [
+          {
+            "node": "Google Tasks: NEXT",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Error Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Tasks: NEXT": {
+      "main": [
+        [
+          {
+            "node": "Build Success Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": null,
+  "versionId": "2135374d-582e-46ad-826b-114711948fec",
+  "activeVersionId": "2135374d-582e-46ad-826b-114711948fec",
+  "versionCounter": 26,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-04-10T16:17:29.167Z",
+      "createdAt": "2026-04-10T16:17:29.167Z",
+      "role": "workflow:owner",
+      "workflowId": "pzYSe2gnvbXLedvG",
+      "projectId": "iBAWD267Vept8IBP",
+      "project": {
+        "updatedAt": "2026-03-23T10:47:09.598Z",
+        "createdAt": "2026-03-21T19:38:32.132Z",
+        "id": "iBAWD267Vept8IBP",
+        "name": "Endrit Murati <endrit.murati99@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "a3d35fcb-0e60-4b54-bc69-fded945cc6eb"
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2026-03-28T18:51:47.046Z",
+      "createdAt": "2026-03-28T18:51:47.046Z",
+      "id": "bzuPAL7S8Y7yZRLv",
+      "name": "diti-ai"
+    },
+    {
+      "updatedAt": "2026-03-28T18:51:47.043Z",
+      "createdAt": "2026-03-28T18:51:47.043Z",
+      "id": "ufC1BgcmNZCN2zIq",
+      "name": "phase-1"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2026-04-14T19:57:52.555Z",
+    "createdAt": "2026-04-14T19:57:52.555Z",
+    "versionId": "2135374d-582e-46ad-826b-114711948fec",
+    "workflowId": "pzYSe2gnvbXLedvG",
+    "nodes": [
+      {
+        "parameters": {},
+        "id": "sub-wf-trigger",
+        "name": "Sub-Workflow Trigger",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1,
+        "position": [
+          240,
+          300
+        ]
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": ""
+            },
+            "conditions": [
+              {
+                "id": "validate-parse-ok",
+                "leftValue": "={{ $json.parse_ok }}",
+                "rightValue": true,
+                "operator": {
+                  "type": "boolean",
+                  "operation": "true"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "id": "validate-title",
+        "name": "Validate",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          480,
+          300
+        ]
+      },
+      {
+        "parameters": {
+          "resource": "task",
+          "operation": "create",
+          "taskList": "={{ $json.resolved_task_list || ($json.params.test_run ? \"NEXT_TEST\" : \"NEXT\") }}",
+          "title": "={{ $json.title }}",
+          "dueDate": "={{ $json.params.due || \"\" }}",
+          "notes": "={{ \"Event: \" + $json.event_id + ($json.params.test_run ? \"\\nTestRun: \" + $json.params.test_run : \"\") + \"\\nProjekt: \" + ($json.params.p || \"-\") + \"\\nPrio: \" + ($json.params.prio || \"M\") + \"\\nKontext: \" + ($json.params.ctx || \"-\") }}"
+        },
+        "id": "create-task-next",
+        "name": "Google Tasks: NEXT",
+        "type": "n8n-nodes-base.googleTasks",
+        "typeVersion": 1,
+        "position": [
+          720,
+          200
+        ],
+        "credentials": {
+          "googleTasksOAuth2Api": {
+            "id": "s305fscwssjI56L7",
+            "name": "Google Tasks account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "const current = items[0].json || {};\nconst upstream = $('Sub-Workflow Trigger').first().json || {};\nconst event = { ...upstream, ...current };\nconst source = event.source || event.source_system || 'telegram';\nreturn [{ json: {\n  chat_id: Number.isFinite(Number(event.chat_id)) ? Number(event.chat_id) : 0,\n  reply_text: 'Task erstellt: ' + (event.title || ''),\n  reply_parse_mode: '',\n  source: source,\n  source_system: event.source_system || source,\n  source_id: event.source_id || '',\n  is_test: Boolean(event.is_test),\n  run_id: event.run_id || null,\n  seq: event.seq || null,\n  expected_route: event.expected_route || '',\n  expected_chain: Array.isArray(event.expected_chain) ? event.expected_chain : [],\n  parse_error: event.parse_error || '',\n  write_safety_error: event.write_safety_error || '',\n  reply_transport: event.reply_transport || (source === 'telegram' ? 'telegram' : 'webhook'),\n  should_telegram_reply: event.should_telegram_reply === true || source === 'telegram',\n  test_run: event.test_run_id || (event.params && event.params.test_run) || '',\n  task_title: event.title || '',\n  task_list: event.resolved_task_list || 'NEXT',\n} }];"
+        },
+        "id": "build-success-reply",
+        "name": "Build Success Reply",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          960,
+          200
+        ]
+      },
+      {
+        "parameters": {
+          "jsCode": "const current = items[0].json || {};\nconst upstream = $('Sub-Workflow Trigger').first().json || {};\nconst event = { ...upstream, ...current };\nconst source = event.source || event.source_system || 'telegram';\nreturn [{ json: {\n  chat_id: Number.isFinite(Number(event.chat_id)) ? Number(event.chat_id) : 0,\n  reply_text: 'Kein Titel angegeben. Beispiel: t: Rechnung senden',\n  reply_parse_mode: '',\n  source: source,\n  source_system: event.source_system || source,\n  source_id: event.source_id || '',\n  is_test: Boolean(event.is_test),\n  run_id: event.run_id || null,\n  seq: event.seq || null,\n  expected_route: event.expected_route || '',\n  expected_chain: Array.isArray(event.expected_chain) ? event.expected_chain : [],\n  parse_error: event.parse_error || '',\n  write_safety_error: event.write_safety_error || '',\n  reply_transport: event.reply_transport || (source === 'telegram' ? 'telegram' : 'webhook'),\n  should_telegram_reply: event.should_telegram_reply === true || source === 'telegram',\n  test_run: event.test_run_id || (event.params && event.params.test_run) || '',\n} }];"
+        },
+        "id": "build-error-reply",
+        "name": "Build Error Reply",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          720,
+          440
+        ]
+      }
+    ],
+    "connections": {
+      "Sub-Workflow Trigger": {
+        "main": [
+          [
+            {
+              "node": "Validate",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validate": {
+        "main": [
+          [
+            {
+              "node": "Google Tasks: NEXT",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Build Error Reply",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Google Tasks: NEXT": {
+        "main": [
+          [
+            {
+              "node": "Build Success Reply",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "import",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "workflowPublishHistory": []
+  }
+}

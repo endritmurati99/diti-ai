@@ -1,0 +1,205 @@
+{
+  "run_id": "batch-20260414T200930Z-f3e031ba",
+  "seq": 1,
+  "transport": "telegram",
+  "status": "sent",
+  "sent_at": "2026-04-14T20:09:30.382674Z",
+  "prefix": "/help",
+  "writes": false,
+  "text": "/help",
+  "expected_command": "help",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "chat_id": 6526468834,
+  "message_id": 77,
+  "source_id": "tg_6526468834_77",
+  "test_run_id": "batch-20260414T200930Z-f3e031ba-00001"
+}
+{
+  "run_id": "batch-20260414T200930Z-f3e031ba",
+  "seq": 2,
+  "transport": "telegram",
+  "status": "sent",
+  "sent_at": "2026-04-14T20:09:31.579474Z",
+  "prefix": "t:",
+  "writes": true,
+  "text": "t: [TEST-batch-20260414T200930Z-f3e031ba-00002] Recruiter antworten naive idee /due=2026-04-30 /prio=high /ctx=health /test_run=batch-20260414T200930Z-f3e031ba-00002",
+  "expected_command": "task",
+  "expected_route": "P1-telegram-task-next-v1",
+  "expected_workflow": "P1-telegram-task-next-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-task-next-v1"
+  ],
+  "chat_id": 6526468834,
+  "message_id": 78,
+  "source_id": "tg_6526468834_78",
+  "test_run_id": "batch-20260414T200930Z-f3e031ba-00002"
+}
+{
+  "run_id": "batch-20260414T200930Z-f3e031ba",
+  "seq": 3,
+  "transport": "telegram",
+  "status": "sent",
+  "sent_at": "2026-04-14T20:09:32.580007Z",
+  "prefix": "q:",
+  "writes": false,
+  "text": "q: slots fuer morgen /window=09:00-12:00 /tz=UTC /test_run=batch-20260414T200930Z-f3e031ba-00003",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "chat_id": 6526468834,
+  "message_id": 79,
+  "source_id": "tg_6526468834_79",
+  "test_run_id": "batch-20260414T200930Z-f3e031ba-00003"
+}
+{
+  "run_id": "batch-20260414T200930Z-f3e031ba",
+  "seq": 4,
+  "transport": "telegram",
+  "status": "sent",
+  "sent_at": "2026-04-14T20:09:33.580079Z",
+  "prefix": "/help",
+  "writes": false,
+  "text": "/help",
+  "expected_command": "help",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "chat_id": 6526468834,
+  "message_id": 80,
+  "source_id": "tg_6526468834_80",
+  "test_run_id": "batch-20260414T200930Z-f3e031ba-00004"
+}
+{
+  "run_id": "batch-20260414T200930Z-f3e031ba",
+  "seq": 5,
+  "transport": "telegram",
+  "status": "sent",
+  "sent_at": "2026-04-14T20:09:34.579967Z",
+  "prefix": "/ping",
+  "writes": false,
+  "text": "/ping",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "chat_id": 6526468834,
+  "message_id": 81,
+  "source_id": "tg_6526468834_81",
+  "test_run_id": "batch-20260414T200930Z-f3e031ba-00005"
+}
+{
+  "run_id": "batch-20260414T200930Z-f3e031ba",
+  "seq": 6,
+  "transport": "telegram",
+  "status": "sent",
+  "sent_at": "2026-04-14T20:09:35.579722Z",
+  "prefix": "/ping",
+  "writes": false,
+  "text": "/ping",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "chat_id": 6526468834,
+  "message_id": 82,
+  "source_id": "tg_6526468834_82",
+  "test_run_id": "batch-20260414T200930Z-f3e031ba-00006"
+}
+{
+  "run_id": "batch-20260414T200930Z-f3e031ba",
+  "seq": 7,
+  "transport": "telegram",
+  "status": "sent",
+  "sent_at": "2026-04-14T20:09:36.580010Z",
+  "prefix": "/ping",
+  "writes": false,
+  "text": "/ping",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "chat_id": 6526468834,
+  "message_id": 83,
+  "source_id": "tg_6526468834_83",
+  "test_run_id": "batch-20260414T200930Z-f3e031ba-00007"
+}
+{
+  "run_id": "batch-20260414T200930Z-f3e031ba",
+  "seq": 8,
+  "transport": "telegram",
+  "status": "sent",
+  "sent_at": "2026-04-14T20:09:37.580150Z",
+  "prefix": "q:",
+  "writes": false,
+  "text": "q: slots fuer morgen /window=10:00-16:00 /tz=UTC /test_run=batch-20260414T200930Z-f3e031ba-00008",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "chat_id": 6526468834,
+  "message_id": 84,
+  "source_id": "tg_6526468834_84",
+  "test_run_id": "batch-20260414T200930Z-f3e031ba-00008"
+}
+{
+  "run_id": "batch-20260414T200930Z-f3e031ba",
+  "seq": 9,
+  "transport": "telegram",
+  "status": "sent",
+  "sent_at": "2026-04-14T20:09:38.580094Z",
+  "prefix": "q:",
+  "writes": false,
+  "text": "q: slots fuer morgen /window=13:00-17:00 /tz=Europe/Berlin /test_run=batch-20260414T200930Z-f3e031ba-00009",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "chat_id": 6526468834,
+  "message_id": 85,
+  "source_id": "tg_6526468834_85",
+  "test_run_id": "batch-20260414T200930Z-f3e031ba-00009"
+}
+{
+  "run_id": "batch-20260414T200930Z-f3e031ba",
+  "seq": 10,
+  "transport": "telegram",
+  "status": "sent",
+  "sent_at": "2026-04-14T20:09:39.580470Z",
+  "prefix": "f:",
+  "writes": true,
+  "text": "f: [TEST-batch-20260414T200930Z-f3e031ba-00010] Arzttermin machen /to=Support /due=+14d /test_run=batch-20260414T200930Z-f3e031ba-00010",
+  "expected_command": "followup",
+  "expected_route": "P1-telegram-task-waiting-v1",
+  "expected_workflow": "P1-telegram-task-waiting-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-task-waiting-v1"
+  ],
+  "chat_id": 6526468834,
+  "message_id": 86,
+  "source_id": "tg_6526468834_86",
+  "test_run_id": "batch-20260414T200930Z-f3e031ba-00010"
+}

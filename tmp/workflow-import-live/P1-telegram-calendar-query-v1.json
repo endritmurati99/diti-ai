@@ -32,7 +32,7 @@
         "operation": "getAll",
         "calendar": {
           "__rl": true,
-          "value": "endrit.murati99@gmail.com",
+          "value": "primary",
           "mode": "id"
         },
         "returnAll": true,

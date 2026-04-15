@@ -1,0 +1,30 @@
+{
+  "run_id": "batch-20260415T084910Z-a80aac1d",
+  "transport": "webhook",
+  "started_at": "2026-04-15T08:49:10.177421Z",
+  "corpus_count": 4,
+  "dry_run": false,
+  "rate_per_second": 1.0,
+  "concurrency": 10,
+  "safety": {
+    "allow_writes": true,
+    "allow_prod_targets": false
+  },
+  "test_targets": {
+    "task_lists": {
+      "next": "NEXT_TEST",
+      "waiting": "WAITING_TEST"
+    },
+    "vault_path": "00_INBOX_TEST/"
+  },
+  "intake_workflow": {
+    "name": "P1-telegram-intake-v2",
+    "id": "kqCxomzy3TWYSllH",
+    "test_webhook_path": "test-intake"
+  },
+  "sent": 4,
+  "failed": 0,
+  "ended_at": "2026-04-15T08:49:11.063821Z",
+  "manifest_path": "tmp\\run-manifest.json",
+  "sent_log_path": "tmp\\webhook-post-subworkflow-fix.jsonl"
+}
