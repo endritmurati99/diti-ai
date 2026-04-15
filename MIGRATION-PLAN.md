@@ -2,8 +2,9 @@
 
 > Dieses Dokument ist die kanonische Anweisung für Claude Code und alle Agenten.
 > Es ersetzt keine bestehende Datei, sondern ergänzt das Projekt um den Migrationsplan.
-> Lege diese Datei im Projektroot ab: `C:\Users\endri\Desktop\Claude-Projects\Diti AI\MIGRATION-PLAN.md`
 > Datum: 2026-04-15
+> OpenClaw Version: 2026.4.14 (pinned)
+> VS1 Cutover Override: `P1-telegram-intake-v2` must be deactivated before OpenClaw takes the Telegram bot token. No parallel Telegram pilot with the same bot is allowed.
 
 ---
 
@@ -138,7 +139,8 @@ Wir führen **OpenClaw** als Conversational Gateway ein. OpenClaw übernimmt die
 | `openclaw/README.md` | Setup-Anleitung | Phase A |
 | `openclaw/.env.example` | OpenClaw Env-Variablen | Phase A |
 | `openclaw/persona.md` | System Prompt + Restriktionen | Phase A |
-| `openclaw/skills/task-create.md` | Skill-Spec VS1 | Phase C |
+| `openclaw/skills/task-create.tool.json` | Tool-Definition VS1 | Phase C |
+| `openclaw/skills/task_create_helper.py` | HTTP-Executor | Phase C |
 | `n8n/workflows/WH-task-create-v1.json` | Webhook-Workflow VS1 | Phase B |
 
 ---
@@ -158,8 +160,7 @@ Wir führen **OpenClaw** als Conversational Gateway ein. OpenClaw übernimmt die
    Extrahiert: title="Rechnung senden", due="2026-04-18"
 
 3. OpenClaw → n8n:
-   POST http://<n8n-host>/webhook/task-create
-   Authorization: Bearer <WEBHOOK_SECRET>
+   POST http://localhost:5678/webhook/task-create
    {
      "intent": "task.create",
      "title": "Rechnung senden",
@@ -167,9 +168,9 @@ Wir führen **OpenClaw** als Conversational Gateway ein. OpenClaw übernimmt die
      "source": { "channel": "telegram", "chat_id": "6526468834", "message_id": "12345", "timestamp": "2026-04-15T14:30:00Z" }
    }
 
-4. n8n verarbeitet:
-   a) Validiert JSON (title nicht leer, due valides Datum)
-   b) Idempotenz-Check (source.channel + source.message_id)
+4. n8n verarbeitet (als Execution Layer):
+   a) Validiert JSON (Authentifizierung via Bearer Token + Inhaltsprüfung)
+   b) Idempotenz-Check (persistent gegen /home/node/.n8n/data/dedup-store.json)
    c) Event-Envelope erzeugen (ULID)
    d) Google Task erstellen (Liste NEXT)
    e) Response:
@@ -207,11 +208,13 @@ A1: OpenClaw installieren
     API Key setzen (Anthropic oder OpenAI)
 
 A2: Telegram anbinden
-    openclaw config set telegram.bot_token "<TOKEN>"
+    P1-telegram-intake-v2 zuerst deaktivieren
+    openclaw config set channels.telegram.enabled true --strict-json
+    openclaw config set channels.telegram.botToken --ref-provider default --ref-source env --ref-id TELEGRAM_BOT_TOKEN
+    openclaw config set channels.telegram.dmPolicy '"allowlist"' --strict-json
+    openclaw config set channels.telegram.allowFrom '[6526468834]' --strict-json
     openclaw gateway restart
-    Pairing: /start → openclaw pairing approve telegram <CODE>
-    WICHTIG: VORHER Telegram-Trigger in n8n DEAKTIVIEREN
-    (P1-telegram-intake-v2 deaktivieren)
+    Pairing: /start → openclaw pairing approve <CODE>
 
 A3: Sicherheitsrestriktionen
     - Shell: OFF
@@ -228,31 +231,32 @@ A4: Persona konfigurieren
 ```
 B1: WH-task-create-v1 erstellen
     Trigger: Webhook POST /webhook/task-create
-    Auth: Bearer Token
-    Nodes: Validate → Dedup → EventEnvelope → GoogleTasks → Response
+    Auth: Header Auth (Bearer Token)
+    Nodes: Validate (Secret Check) → Dedup (Persistent File-based) → EventEnvelope → GoogleTasks → Response
     Error Branch: BuildError → ErrorResponse
     Error Workflow: P1-error-handler-v1
 
 B2: Importieren und aktivieren
-    n8nctl.cmd workflow import WH-task-create-v1.json
-    n8nctl.cmd workflow activate <id>
+    diti-n8n.cmd workflow import WH-task-create-v1.json
+    diti-n8n.cmd workflow activate <id>
 
 B3: Manueller Test via curl
     curl -X POST http://localhost:5678/webhook/task-create \
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer <SECRET>" \
       -d '{"intent":"task.create","title":"Curl-Test","params":{"due":"2026-04-20","prio":"M"},"source":{"channel":"test","chat_id":"6526468834","message_id":"curl-001"}}'
-    Prüfen: Task vorhanden? JSON korrekt? Duplikat blockiert?
 ```
 
 ### Phase C: Skill erstellen und verbinden
 
 ```
-C1: Custom Skill definieren (nach openclaw/skills/task-create.md)
-C2: Skill implementieren (HTTP POST an Webhook)
+C1: Workspace definieren (openclaw/workspace/SOUL.md + skills/task-create/SKILL.md)
+    - OpenClaw fungiert als NLP-zu-Schema-Übersetzer.
+C2: Skill-Executor implementieren (via openclaw/skills/task_create_helper.py)
+    - Rein technisches Routing der Schema-Daten an den n8n-Webhook.
+    - Nutzt nur Python-Standardbibliothek an localhost:5678
 C3: End-to-End-Test via Telegram
-C4: Telegram-Trigger in n8n endgültig deaktivieren
-    (ERST wenn C3 stabil)
+C4: 7-Tage-Pilot nur mit OpenClaw als einzigem Telegram-Consumer
 ```
 
 ### Phase D: 7-Tage-Bewährungstest
@@ -315,8 +319,6 @@ D4: Go/No-Go für VS2 (>90% Erfolg, keine kritischen Fehler)
 }
 ```
 
-Fehlertypen: `missing_title`, `invalid_date`, `unauthorized`, `duplicate`, `google_api_error`
-
 ---
 
 ## 7. Workflow-Spezifikation: WH-task-create-v1
@@ -333,30 +335,25 @@ Credential-IDs:
 Node-Reihenfolge:
 1. Webhook Trigger (POST /webhook/task-create, Header Auth, responseNode)
 2. Validate Input (Code Node) → Error Branch bei Fehler
-3. Dedup Check (Code Node, source.channel + source.message_id, max 1000)
-4. Generate Event Envelope (Code Node, ULID aus command-parser.js)
+3. Dedup Check (Code Node, nutzt /home/node/.n8n/data/dedup-store.json)
+    - Persistent in n8n-Container-Volume
+    - TTL: 7 Tage, Max: 1000 Einträge
+4. Generate Event Envelope (Code Node, ULID-Generation)
 5. Google Tasks: Create (Liste NEXT, Title, Due, Notes)
 6. Build Success Response (Code Node)
 7. Respond to Webhook (JSON, HTTP 200)
-
-Error Branch:
-8. Build Error Response (Code Node)
-9. Respond to Webhook (JSON, HTTP 400)
 ```
 
 ---
 
-## 8. Netzwerk
+### Phase 1: Lokal (aktuell)
+- OpenClaw auf Host oder WSL2
+- n8n in Docker (Container)
+- Kommunikation via http://localhost:5678 (Host-Side Port Mapping)
 
-| Von | Nach | Protokoll |
-|---|---|---|
-| OpenClaw | n8n Webhook | HTTP localhost:5678 |
-| OpenClaw | Telegram API | HTTPS (ausgehend) |
-| n8n | Google APIs | HTTPS (bestehend) |
-| n8n | Obsidian Vault | Dateisystem (Docker Mount) |
-
-n8n Webhook NICHT ins öffentliche Internet exponieren.
-Bei separaten Hosts: Tailscale/WireGuard + Bearer Auth.
+### Phase 2: VPS (Zukunft)
+- Umstellung auf Hostnamen / Tailscale / WireGuard
+- Kein localhost mehr verwenden.
 
 ---
 
@@ -373,38 +370,24 @@ Bei separaten Hosts: Tailscale/WireGuard + Bearer Auth.
 | VS7 | Briefing via OpenClaw | Optional |
 | VS8 | Knowledge Search (RAG) | Eigenes Projekt |
 
-**NICHT anfangen bevor VS1 stabil. Keine Ausnahmen.**
-
 ---
 
 ## 10. Regeln für Claude Code
 
 ### Pflicht
-- [ ] MIGRATION-PLAN.md zuerst lesen
+- [x] MIGRATION-PLAN.md zuerst lesen
 - [ ] AGENTS.md und CLAUDE.md für bestehende Regeln
 - [ ] n8nctl.cmd und odoocli für CLI-Operationen
 - [ ] Erst lesen, dann ändern
 
 ### Für Webhook-Workflow
-- [ ] WH-task-create-v1.json nach Spec Abschnitt 7
-- [ ] Event-Envelope aus config/event-envelope.md
-- [ ] ULID-Generator aus n8n/api/command-parser.js
-- [ ] Google Tasks Credential: s305fscwssjI56L7
-- [ ] Telegram Credential: Arepn5qW2Si65rVX
-- [ ] Webhook-Auth: Bearer Token
-- [ ] Idempotenz: source.channel + source.message_id
-- [ ] Error Handler: ezKkyglJhrTwPi8n
+- [x] WH-task-create-v1.json nach Spec Abschnitt 7
+- [x] Dedup: n8n/data/dedup-store.json
+- [x] Google Tasks Credential: s305fscwssjI56L7
+- [x] Telegram Credential: Arepn5qW2Si65rVX
 
 ### Für OpenClaw
-- [ ] openclaw/ Verzeichnis mit README, persona, .env.example
-- [ ] Skills als Markdown-Specs in openclaw/skills/
-- [ ] Telegram-Trigger ERST deaktivieren wenn Skill stabil
-
-### Verboten
-- [ ] P1-telegram-intake-v2 NICHT löschen (nur deaktivieren)
-- [ ] SoR-Matrix NICHT ändern
-- [ ] Event-Envelope NICHT ändern
-- [ ] NICHT an VS2-VS8 arbeiten vor VS1-Stabilität
-- [ ] NICHT OpenJarvis installieren
-- [ ] NICHT WhatsApp einrichten
-- [ ] NICHT bestehende Workflows refactoren die nicht zu VS1 gehören
+- [x] openclaw/workspace/SOUL.md
+- [x] openclaw/workspace/skills/task-create/SKILL.md
+- [x] openclaw/skills/task_create_helper.py
+- [x] Telegram-Trigger VOR OpenClaw-Cutover deaktivieren

@@ -8,24 +8,27 @@
         "path": "task-create",
         "responseMode": "responseNode",
         "authentication": "headerAuth",
-        "headerAuth": {
-          "name": "Authorization",
-          "value": "={{ 'Bearer ' + ($env.DITI_WEBHOOK_SECRET || $env.WEBHOOK_SECRET || '') }}"
-        },
         "options": {}
       },
       "id": "webhook-task-create",
+      "webhookId": "diti-vs1-task-create",
       "name": "Webhook: task-create",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
         240,
         300
-      ]
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "f10cDhII4HAILmEK",
+          "name": "Diti VS1 Webhook Bearer"
+        }
+      }
     },
     {
       "parameters": {
-        "jsCode": "const body = items[0].json || {};\nconst headers = (body.headers && typeof body.headers === 'object') ? body.headers : (body.raw_headers && typeof body.raw_headers === 'object' ? body.raw_headers : {});\nconst authHeader = headers.authorization || headers.Authorization || '';\nconst expected = 'Bearer ' + String($env.DITI_WEBHOOK_SECRET || $env.WEBHOOK_SECRET || '');\n\n// Minimal auth guard (in addition to Webhook header auth)\nif (!expected.trim() || String(authHeader || '').trim() !== expected.trim()) {\n  return [{ json: { __is_error: true, ok: false, error: 'unauthorized', message: 'Unauthorized.' } }];\n}\n\nconst title = typeof body.title === 'string' ? body.title.trim() : '';\nif (!title) {\n  return [{ json: { __is_error: true, ok: false, error: 'missing_title', message: 'Kein Titel angegeben.' } }];\n}\n\nconst params = (body.params && typeof body.params === 'object') ? body.params : {};\nconst source = (body.source && typeof body.source === 'object') ? body.source : {};\nreturn [{ json: {\n  __is_error: false,\n  intent: body.intent || 'task.create',\n  title,\n  params: {\n    due: typeof params.due === 'string' ? params.due : '',\n    prio: typeof params.prio === 'string' && params.prio ? params.prio : 'M',\n    project: typeof params.project === 'string' ? params.project : '',\n    context: typeof params.context === 'string' ? params.context : ''\n  },\n  source: {\n    channel: String(source.channel || 'telegram'),\n    chat_id: String(source.chat_id || ''),\n    message_id: String(source.message_id || ''),\n    timestamp: String(source.timestamp || new Date().toISOString())\n  }\n} }];"
+        "jsCode": "const request = items[0].json || {};\nconst body = (request.body && typeof request.body === 'object') ? request.body : request;\nconst headers = (request.headers && typeof request.headers === 'object') ? request.headers : {};\nconst authHeader = headers.authorization || headers.Authorization || '';\nconst expected = 'Bearer ' + String($env.DITI_WEBHOOK_SECRET || $env.WEBHOOK_SECRET || '');\n\n// Minimal auth guard (in addition to Webhook header auth)\nif (!expected.trim() || String(authHeader || '').trim() !== expected.trim()) {\n  return [{ json: { __is_error: true, ok: false, error: 'unauthorized', message: 'Unauthorized.' } }];\n}\n\nconst title = typeof body.title === 'string' ? body.title.trim() : '';\nif (!title) {\n  return [{ json: { __is_error: true, ok: false, error: 'missing_title', message: 'Kein Titel angegeben.' } }];\n}\n\nconst params = (body.params && typeof body.params === 'object') ? body.params : {};\nconst source = (body.source && typeof body.source === 'object') ? body.source : {};\nreturn [{ json: {\n  __is_error: false,\n  intent: body.intent || 'task.create',\n  title,\n  params: {\n    due: typeof params.due === 'string' ? params.due : '',\n    prio: typeof params.prio === 'string' && params.prio ? params.prio : 'M',\n    project: typeof params.project === 'string' ? params.project : '',\n    context: typeof params.context === 'string' ? params.context : ''\n  },\n  source: {\n    channel: String(source.channel || 'telegram'),\n    chat_id: String(source.chat_id || ''),\n    message_id: String(source.message_id || ''),\n    timestamp: String(source.timestamp || new Date().toISOString())\n  }\n} }];"
       },
       "id": "validate-input",
       "name": "Validate Input",
@@ -69,7 +72,7 @@
     },
     {
       "parameters": {
-        "jsCode": "function generateULID() {\n  const encoding = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';\n  let now = Date.now();\n  let timePart = '';\n  for (let index = 9; index >= 0; index -= 1) {\n    timePart = encoding[now % 32] + timePart;\n    now = Math.floor(now / 32);\n  }\n  let randomPart = '';\n  for (let index = 0; index < 16; index += 1) {\n    randomPart += encoding[Math.floor(Math.random() * 32)];\n  }\n  return timePart + randomPart;\n}\n\nconst input = items[0].json || {};\nconst source = input.source || {};\nconst dedupKey = String(source.channel || '') + ':' + String(source.message_id || '');\n\nconst staticData = getWorkflowStaticData('global');\nif (!staticData.seen) staticData.seen = [];\nconst seen = Array.isArray(staticData.seen) ? staticData.seen : [];\n\nif (dedupKey && seen.includes(dedupKey)) {\n  return [{ json: { __is_error: true, ok: false, error: 'duplicate', message: 'Duplicate request.' } }];\n}\n\nif (dedupKey) {\n  seen.push(dedupKey);\n  // cap at 1000 entries\n  if (seen.length > 1000) seen.splice(0, seen.length - 1000);\n  staticData.seen = seen;\n}\n\nconst event_id = generateULID();\nconst event_envelope = {\n  event_id,\n  event_type: 'task.create',\n  source_system: String(source.channel || 'telegram'),\n  source_id: String(source.message_id || ''),\n  timestamp: String(source.timestamp || new Date().toISOString()),\n  actor: 'user',\n  payload: {\n    intent: 'task.create',\n    title: String(input.title || ''),\n    params: input.params || {}\n  }\n};\n\nreturn [{ json: { ...input, __is_error: false, event_id, event_envelope } }];"
+        "jsCode": "const fs = require('fs');\nconst path = require('path');\n\nfunction generateULID() {\n  const encoding = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';\n  let now = Date.now();\n  let timePart = '';\n  for (let index = 9; index >= 0; index -= 1) {\n    timePart = encoding[now % 32] + timePart;\n    now = Math.floor(now / 32);\n  }\n  let randomPart = '';\n  for (let index = 0; index < 16; index += 1) {\n    randomPart += encoding[Math.floor(Math.random() * 32)];\n  }\n  return timePart + randomPart;\n}\n\nconst input = items[0].json || {};\nconst source = input.source || {};\nconst dedupKey = String(source.channel || '') + ':' + String(source.message_id || '');\n\nconst DEDUP_FILE = '/home/node/.n8n/data/dedup-store.json'; // Path inside Docker container\nconst MAX_ENTRIES = 1000;\nconst TTL_DAYS = 7;\n\nlet dedupStore = { seen: {} };\ntry {\n  if (fs.existsSync(DEDUP_FILE)) {\n    dedupStore = JSON.parse(fs.readFileSync(DEDUP_FILE, 'utf8'));\n  }\n} catch (e) {\n  // If file exists but is corrupted, start fresh\n}\n\nif (!dedupStore.seen) dedupStore.seen = {};\n\n// Check if already seen\nif (dedupKey && dedupStore.seen[dedupKey]) {\n  return [{ json: { __is_error: true, ok: false, error: 'duplicate', message: 'Duplicate request.' } }];\n}\n\n// Add to store with current timestamp\nif (dedupKey) {\n  dedupStore.seen[dedupKey] = Date.now();\n\n  // Cleanup old entries (TTL)\n  const now = Date.now();\n  const ttlMs = TTL_DAYS * 24 * 60 * 60 * 1000;\n  for (const key in dedupStore.seen) {\n    if (now - dedupStore.seen[key] > ttlMs) {\n      delete dedupStore.seen[key];\n    }\n  }\n\n  // Cleanup if too many entries (Max Limit)\n  const keys = Object.keys(dedupStore.seen);\n  if (keys.length > MAX_ENTRIES) {\n    // Sort keys by timestamp and keep newest 1000\n    keys.sort((a, b) => dedupStore.seen[b] - dedupStore.seen[a]);\n    const toKeep = keys.slice(0, MAX_ENTRIES);\n    const newStore = {};\n    toKeep.forEach(k => { newStore[k] = dedupStore.seen[k]; });\n    dedupStore.seen = newStore;\n  }\n\n  // Write back to file\n  try {\n    // Ensure directory exists\n    const dir = path.dirname(DEDUP_FILE);\n    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });\n    fs.writeFileSync(DEDUP_FILE, JSON.stringify(dedupStore, null, 2));\n  } catch (e) {\n    // log error internally if possible or proceed if non-critical\n  }\n}\n\nconst event_id = generateULID();\nconst event_envelope = {\n  event_id,\n  event_type: 'task.create',\n  source_system: String(source.channel || 'telegram'),\n  source_id: String(source.message_id || ''),\n  timestamp: String(source.timestamp || new Date().toISOString()),\n  actor: 'user',\n  payload: {\n    intent: 'task.create',\n    title: String(input.title || ''),\n    params: input.params || {}\n  }\n};\n\nreturn [{ json: { ...input, __is_error: false, event_id, event_envelope } }];"
       },
       "id": "dedup-envelope",
       "name": "Dedup & Envelope",
@@ -115,10 +118,12 @@
       "parameters": {
         "resource": "task",
         "operation": "create",
-        "task": "NEXT",
+        "task": "NTF2ZWN3Y0ZvSDM4RXIwMA",
         "title": "={{ $json.title }}",
-        "dueDate": "={{ $json.params.due || \"\" }}",
-        "notes": "={{ \"Event: \" + $json.event_id + \"\\nPrio: \" + ($json.params.prio || \"M\") }}"
+        "additionalFields": {
+          "dueDate": "={{ $json.params.due ? ($json.params.due + \"T00:00:00.000Z\") : \"\" }}",
+          "notes": "={{ \"Event: \" + $json.event_id + \"\\nPrio: \" + ($json.params.prio || \"M\") }}"
+        }
       },
       "id": "google-tasks-create",
       "name": "Google Tasks: NEXT",
@@ -138,7 +143,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const taskResult = items[0].json || {};\nconst upstream = $('Dedup & Envelope').first().json || {};\n\n// When continueOnFail=true, n8n includes an error object on item.json in many nodes.\nif (!taskResult || !taskResult.id) {\n  const message = (taskResult && taskResult.error && taskResult.error.message) ? String(taskResult.error.message) : 'Google Tasks error';\n  return [{ json: { __is_error: true, ok: false, error: 'google_api_error', message } }];\n}\n\nreturn [{ json: {\n  __is_error: false,\n  ok: true,\n  action: 'task.created',\n  task: {\n    id: String(taskResult.id),\n    title: String(upstream.title || ''),\n    due: String((upstream.params && upstream.params.due) || ''),\n    list: 'NEXT'\n  },\n  event_id: String(upstream.event_id || '')\n} }];"
+        "jsCode": "const taskResult = items[0].json || {};\nconst upstream = $('Dedup & Envelope').first().json || {};\n\n// When continueOnFail=true, n8n includes an error object on item.json in many nodes.\nif (!taskResult || !taskResult.id) {\n  const message = taskResult?.error?.message || taskResult?.message || taskResult?.description || JSON.stringify(taskResult) || 'Google Tasks error';\n  return [{ json: { __is_error: true, ok: false, error: 'google_api_error', message } }];\n}\n\nreturn [{ json: {\n  __is_error: false,\n  ok: true,\n  action: 'task.created',\n  task: {\n    id: String(taskResult.id),\n    title: String(upstream.title || ''),\n    due: String((upstream.params && upstream.params.due) || ''),\n    list: 'NEXT'\n  },\n  event_id: String(upstream.event_id || '')\n} }];"
       },
       "id": "build-success",
       "name": "Build Success Response",
@@ -342,4 +347,3 @@
     }
   ]
 }
-

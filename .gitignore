@@ -16,6 +16,15 @@ n8n/*.enc
 # n8n event logs (runtime data)
 n8n/logs/*.jsonl
 
+# OpenClaw runtime/workspace bootstrap noise
+scratch/
+openclaw/workspace/BOOTSTRAP.md
+openclaw/workspace/HEARTBEAT.md
+openclaw/workspace/IDENTITY.md
+openclaw/workspace/USER.md
+openclaw/workspace/.openclaw/
+openclaw/workspace/state/
+
 # OS
 .DS_Store
 Thumbs.db

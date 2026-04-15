@@ -1,0 +1,27 @@
+{
+  "name": "task-create",
+  "description": "Create a task in Diti AI (Google Tasks). Recognizes title, due date, and priority.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "The description of the task."
+      },
+      "due": {
+        "type": "string",
+        "description": "Optional due date in YYYY-MM-DD format."
+      },
+      "prio": {
+        "type": "string",
+        "enum": ["H", "M", "L"],
+        "description": "Priority: H (High), M (Medium), L (Low). Default: M."
+      }
+    },
+    "required": ["title"]
+  },
+  "handler": {
+    "type": "script",
+    "path": "task_create_helper.py"
+  }
+}
