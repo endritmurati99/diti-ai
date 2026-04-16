@@ -111,6 +111,25 @@ The vault root is [obsidian-vault/](obsidian-vault/).
 
 Notes from automation should land in inbox locations first and be curated later.
 
+## Session Rules
+
+- Start every Diti AI work session by stating what is still pending today, what is blocking testing, and what should happen next (the "Today's Agenda").
+- If the stack is still not testable (e.g., n8n health failing or credentials missing), say that explicitly before proposing further implementation work.
+- Use concrete dates when referring to `today`, `tomorrow`, or `yesterday` in status updates.
+
+## Dev Logging
+
+- Every substantive Diti AI session must be recorded in `obsidian-vault/80_DEV_LOG/`.
+- **Mandatory Procedure:** Document progress using the `/obsidian-cli` symbolic command followed by a direct update to the Devlog file.
+- Use the existing dev-log structure and keep the entry current with work completed, decisions, blockers, and next steps.
+- Keep log entries aligned with the existing `80_DEV_LOG/` naming convention.
+
+## Git Sync
+
+- After each completed code or documentation change set, push the result to Git once the work is in a clean, reviewable state.
+- Use the appropriate Git workflow for the active model or environment, including Git skills, GitHub MCPs, or `gh`/git CLI when that is the supported path.
+- Do not leave finished changes unpushed unless the repo is intentionally blocked by an external dependency or the user explicitly says to hold.
+
 ## Environment and Runtime
 
 The project uses `config/.env` plus the Diti wrapper `diti-n8n.cmd`.

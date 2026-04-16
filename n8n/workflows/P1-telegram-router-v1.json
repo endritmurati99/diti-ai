@@ -1,0 +1,1503 @@
+{
+  "updatedAt": "2026-04-16T08:23:11.158Z",
+  "createdAt": "2026-04-11T15:05:13.038Z",
+  "id": "2Ckdfk7HHSRFnQoh",
+  "name": "P1-telegram-router-v1",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "execute-workflow-trigger",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        208,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "function generateULID() {\n  const E = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';\n  let now = Date.now(), t = '';\n  for (let i = 9; i >= 0; i--) { t = E[now % 32] + t; now = Math.floor(now / 32); }\n  let r = '';\n  for (let i = 0; i < 16; i++) r += E[Math.floor(Math.random() * 32)];\n  return t + r;\n}\n\nconst msg = items[0].json.message || items[0].json;\nconst text = msg.text || '';\nconst msgId = msg.message_id || 0;\nconst chatId = msg.chat ? msg.chat.id : 0;\n\nconst event = {\n  event_id: generateULID(),\n  source_system: 'telegram',\n  source_id: 'tg_' + chatId + '_' + msgId,\n  chat_id: typeof chatId === 'number' ? chatId : Number(chatId),\n  message_id: msgId,\n  received_at: new Date().toISOString(),\n  raw_text: text,\n  command: 'unknown',\n  entity_type: '',\n  target_system: '',\n  title: '',\n  params: {},\n  parse_ok: false,\n  parse_error: ''\n};\n\nif (!text) {\n  event.parse_error = 'non_text_message';\n  return [{ json: event }];\n}\n\nconst trimmed = text.trim();\n\nif (trimmed === '/help') {\n  event.command = 'help';\n  event.parse_ok = true;\n  return [{ json: event }];\n}\nif (trimmed === '/ping') {\n  event.command = 'ping';\n  event.parse_ok = true;\n  return [{ json: event }];\n}\n\nconst prefixMatch = trimmed.match(/^([tfkq]):\\s*(.*)/is);\nif (!prefixMatch) {\n  event.command = 'unknown';\n  event.parse_error = 'unknown_prefix';\n  return [{ json: event }];\n}\n\nconst prefixMap = { t: 'task', f: 'followup', k: 'knowledge', q: 'calendar_query' };\nconst entityMap = { t: 'task.create', f: 'followup.create', k: 'knowledge.draft', q: 'calendar.query' };\nconst targetMap = { t: 'google_tasks', f: 'google_tasks', k: 'obsidian', q: 'google_calendar' };\n\nconst prefix = prefixMatch[1].toLowerCase();\nevent.command = prefixMap[prefix];\nevent.entity_type = entityMap[prefix];\nevent.target_system = targetMap[prefix];\n\nlet rest = prefixMatch[2] || '';\nconst params = {};\nconst paramRe = /\\/(\\w+)=([^\\s\\/]+)/g;\nlet match;\nwhile ((match = paramRe.exec(rest)) !== null) { params[match[1]] = match[2]; }\nevent.params = params;\n\nconst title = rest.replace(/\\/\\w+=[^\\s\\/]+/g, '').trim();\nevent.title = title;\n\nif (!title && prefix !== 'q') {\n  event.parse_error = 'empty_title';\n} else {\n  event.parse_ok = true;\n}\n\nreturn [{ json: event }];"
+      },
+      "id": "normalize-event",
+      "name": "Normalize Event",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": ""
+          },
+          "conditions": [
+            {
+              "id": "chat-id-check",
+              "leftValue": "={{ String($json.chat_id) }}",
+              "rightValue": "6526468834",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "allowlist-check",
+      "name": "Allowlist Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        640,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "r1",
+              "name": "chat_id",
+              "value": "={{ $json.chat_id }}",
+              "type": "number"
+            },
+            {
+              "id": "r2",
+              "name": "reply_text",
+              "value": "Nicht autorisierter Chat.",
+              "type": "string"
+            },
+            {
+              "id": "r3",
+              "name": "reply_parse_mode",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "reply-nicht-autorisiert",
+      "name": "Reply: Nicht autorisiert",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        864,
+        704
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": ""
+          },
+          "conditions": [
+            {
+              "id": "text-check",
+              "leftValue": "={{ $json.parse_error }}",
+              "rightValue": "non_text_message",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "text-guard",
+      "name": "Text Guard",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        864,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "r1",
+              "name": "chat_id",
+              "value": "={{ $json.chat_id }}",
+              "type": "number"
+            },
+            {
+              "id": "r2",
+              "name": "reply_text",
+              "value": "Ungueltige Eingabe. Nutze /help fuer alle verfuegbaren Commands.",
+              "type": "string"
+            },
+            {
+              "id": "r3",
+              "name": "reply_parse_mode",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "reply-nur-text",
+      "name": "Reply: Nur Text-Commands",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1088,
+        704
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "remove-duplicates",
+      "name": "Remove Duplicates",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "pzYSe2gnvbXLedvG",
+        "options": {}
+      },
+      "id": "exec-task-next",
+      "name": "Execute: task-next",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "6d1fV8surkco100H",
+        "options": {}
+      },
+      "id": "exec-task-waiting",
+      "name": "Execute: task-waiting",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "Jm3AB26MzUlxauV6",
+        "options": {}
+      },
+      "id": "exec-knowledge",
+      "name": "Execute: knowledge-draft",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        464
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "FLsNZCEhoqtwCbPG",
+        "options": {}
+      },
+      "id": "exec-calendar",
+      "name": "Execute: calendar-query",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "h1",
+              "name": "chat_id",
+              "value": "={{ $json.chat_id }}",
+              "type": "number"
+            },
+            {
+              "id": "h2",
+              "name": "reply_text",
+              "value": "Command-Uebersicht\\n\\n/ping - Bot-Test\\n/help - Diese Hilfe\\n\\nt: Titel /due=YYYY-MM-DD\\nf: Titel /due=YYYY-MM-DD\\nk: Titel\\nq: free YYYY-MM-DD /window=09:00-17:00 /tz=Europe/Berlin\\n\\nBeispiele:\\nt: Rechnung senden /due=2026-04-12\\nf: Antwort von Max /due=2026-04-14\\nk: Idee fuer Telegram Intake\\nq: free 2026-04-18 /window=09:00-17:00 /tz=Europe/Berlin",
+              "type": "string"
+            },
+            {
+              "id": "h3",
+              "name": "reply_parse_mode",
+              "value": "Markdown",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "help-reply",
+      "name": "Help Reply",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        832
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "p1",
+              "name": "chat_id",
+              "value": "={{ $json.chat_id }}",
+              "type": "number"
+            },
+            {
+              "id": "p2",
+              "name": "reply_text",
+              "value": "ok - telegram intake aktiv",
+              "type": "string"
+            },
+            {
+              "id": "p3",
+              "name": "reply_parse_mode",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ping-reply",
+      "name": "Ping Reply",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        992
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f1",
+              "name": "chat_id",
+              "value": "={{ $json.chat_id }}",
+              "type": "number"
+            },
+            {
+              "id": "f2",
+              "name": "reply_text",
+              "value": "Ungueltiger Command. Nutze /help.\\n\\nErlaubt sind:\\n- t: Titel /due=YYYY-MM-DD\\n- f: Titel /due=YYYY-MM-DD\\n- k: Titel\\n- q: free YYYY-MM-DD /window=09:00-17:00 /tz=Europe/Berlin",
+              "type": "string"
+            },
+            {
+              "id": "f3",
+              "name": "reply_parse_mode",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fallback-reply",
+      "name": "Fallback Reply",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        1152
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.reply_text }}",
+        "additionalFields": {}
+      },
+      "id": "telegram-reply",
+      "name": "Telegram Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1824,
+        512
+      ],
+      "webhookId": "d6ee9e85-50d6-4f7f-9c20-30f2911d11e9",
+      "credentials": {
+        "telegramApi": {
+          "id": "Arepn5qW2Si65rVX",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.command }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "task"
+            },
+            {
+              "value2": "followup",
+              "output": 1
+            },
+            {
+              "value2": "knowledge",
+              "output": 2
+            }
+          ]
+        },
+        "fallbackOutput": 3
+      },
+      "id": "command-switch-1",
+      "name": "Route Command 1",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1312,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.command }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "calendar_query"
+            },
+            {
+              "value2": "help",
+              "output": 1
+            },
+            {
+              "value2": "ping",
+              "output": 2
+            }
+          ]
+        },
+        "fallbackOutput": 3
+      },
+      "id": "command-switch-2",
+      "name": "Route Command 2",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1328,
+        784
+      ]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Event": {
+      "main": [
+        [
+          {
+            "node": "Allowlist Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Allowlist Check": {
+      "main": [
+        [
+          {
+            "node": "Text Guard",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reply: Nicht autorisiert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply: Nicht autorisiert": {
+      "main": [
+        [
+          {
+            "node": "Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Guard": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reply: Nur Text-Commands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply: Nur Text-Commands": {
+      "main": [
+        [
+          {
+            "node": "Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Route Command 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Command": {
+      "main": [
+        [
+          {
+            "node": "Execute: task-next",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute: task-waiting",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute: knowledge-draft",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute: calendar-query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Help Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ping Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fallback Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute: task-next": {
+      "main": [
+        [
+          {
+            "node": "Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute: task-waiting": {
+      "main": [
+        [
+          {
+            "node": "Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute: knowledge-draft": {
+      "main": [
+        [
+          {
+            "node": "Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute: calendar-query": {
+      "main": [
+        [
+          {
+            "node": "Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Help Reply": {
+      "main": [
+        [
+          {
+            "node": "Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ping Reply": {
+      "main": [
+        [
+          {
+            "node": "Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fallback Reply": {
+      "main": [
+        [
+          {
+            "node": "Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Command 1": {
+      "main": [
+        [
+          {
+            "node": "Execute: task-next",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute: task-waiting",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute: knowledge-draft",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Route Command 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Command 2": {
+      "main": [
+        [
+          {
+            "node": "Execute: calendar-query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Help Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ping Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fallback Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "1c82f9f2-0fcb-444b-a5eb-081ec4d56d95",
+  "activeVersionId": "1c82f9f2-0fcb-444b-a5eb-081ec4d56d95",
+  "versionCounter": 40,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-04-11T15:05:13.038Z",
+      "createdAt": "2026-04-11T15:05:13.038Z",
+      "role": "workflow:owner",
+      "workflowId": "2Ckdfk7HHSRFnQoh",
+      "projectId": "iBAWD267Vept8IBP",
+      "project": {
+        "updatedAt": "2026-03-23T10:47:09.598Z",
+        "createdAt": "2026-03-21T19:38:32.132Z",
+        "id": "iBAWD267Vept8IBP",
+        "name": "Endrit Murati <endrit.murati99@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "a3d35fcb-0e60-4b54-bc69-fded945cc6eb"
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2026-03-28T18:51:47.043Z",
+      "createdAt": "2026-03-28T18:51:47.043Z",
+      "id": "ufC1BgcmNZCN2zIq",
+      "name": "phase-1"
+    },
+    {
+      "updatedAt": "2026-03-28T18:51:47.046Z",
+      "createdAt": "2026-03-28T18:51:47.046Z",
+      "id": "bzuPAL7S8Y7yZRLv",
+      "name": "diti-ai"
+    },
+    {
+      "updatedAt": "2026-04-11T15:05:11.462Z",
+      "createdAt": "2026-04-11T15:05:11.462Z",
+      "id": "Y2QQDJVTRQgTIGew",
+      "name": "intake-router"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2026-04-11T16:02:41.303Z",
+    "createdAt": "2026-04-11T16:02:32.737Z",
+    "versionId": "1c82f9f2-0fcb-444b-a5eb-081ec4d56d95",
+    "workflowId": "2Ckdfk7HHSRFnQoh",
+    "nodes": [
+      {
+        "parameters": {},
+        "id": "execute-workflow-trigger",
+        "name": "Execute Workflow Trigger",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1,
+        "position": [
+          208,
+          512
+        ]
+      },
+      {
+        "parameters": {
+          "jsCode": "function generateULID() {\n  const E = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';\n  let now = Date.now(), t = '';\n  for (let i = 9; i >= 0; i--) { t = E[now % 32] + t; now = Math.floor(now / 32); }\n  let r = '';\n  for (let i = 0; i < 16; i++) r += E[Math.floor(Math.random() * 32)];\n  return t + r;\n}\n\nconst msg = items[0].json.message || items[0].json;\nconst text = msg.text || '';\nconst msgId = msg.message_id || 0;\nconst chatId = msg.chat ? msg.chat.id : 0;\n\nconst event = {\n  event_id: generateULID(),\n  source_system: 'telegram',\n  source_id: 'tg_' + chatId + '_' + msgId,\n  chat_id: typeof chatId === 'number' ? chatId : Number(chatId),\n  message_id: msgId,\n  received_at: new Date().toISOString(),\n  raw_text: text,\n  command: 'unknown',\n  entity_type: '',\n  target_system: '',\n  title: '',\n  params: {},\n  parse_ok: false,\n  parse_error: ''\n};\n\nif (!text) {\n  event.parse_error = 'non_text_message';\n  return [{ json: event }];\n}\n\nconst trimmed = text.trim();\n\nif (trimmed === '/help') {\n  event.command = 'help';\n  event.parse_ok = true;\n  return [{ json: event }];\n}\nif (trimmed === '/ping') {\n  event.command = 'ping';\n  event.parse_ok = true;\n  return [{ json: event }];\n}\n\nconst prefixMatch = trimmed.match(/^([tfkq]):\\s*(.*)/is);\nif (!prefixMatch) {\n  event.command = 'unknown';\n  event.parse_error = 'unknown_prefix';\n  return [{ json: event }];\n}\n\nconst prefixMap = { t: 'task', f: 'followup', k: 'knowledge', q: 'calendar_query' };\nconst entityMap = { t: 'task.create', f: 'followup.create', k: 'knowledge.draft', q: 'calendar.query' };\nconst targetMap = { t: 'google_tasks', f: 'google_tasks', k: 'obsidian', q: 'google_calendar' };\n\nconst prefix = prefixMatch[1].toLowerCase();\nevent.command = prefixMap[prefix];\nevent.entity_type = entityMap[prefix];\nevent.target_system = targetMap[prefix];\n\nlet rest = prefixMatch[2] || '';\nconst params = {};\nconst paramRe = /\\/(\\w+)=([^\\s\\/]+)/g;\nlet match;\nwhile ((match = paramRe.exec(rest)) !== null) { params[match[1]] = match[2]; }\nevent.params = params;\n\nconst title = rest.replace(/\\/\\w+=[^\\s\\/]+/g, '').trim();\nevent.title = title;\n\nif (!title && prefix !== 'q') {\n  event.parse_error = 'empty_title';\n} else {\n  event.parse_ok = true;\n}\n\nreturn [{ json: event }];"
+        },
+        "id": "normalize-event",
+        "name": "Normalize Event",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          432,
+          512
+        ]
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": ""
+            },
+            "conditions": [
+              {
+                "id": "chat-id-check",
+                "leftValue": "={{ String($json.chat_id) }}",
+                "rightValue": "6526468834",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "id": "allowlist-check",
+        "name": "Allowlist Check",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          640,
+          512
+        ]
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "r1",
+                "name": "chat_id",
+                "value": "={{ $json.chat_id }}",
+                "type": "number"
+              },
+              {
+                "id": "r2",
+                "name": "reply_text",
+                "value": "Nicht autorisierter Chat.",
+                "type": "string"
+              },
+              {
+                "id": "r3",
+                "name": "reply_parse_mode",
+                "value": "",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "reply-nicht-autorisiert",
+        "name": "Reply: Nicht autorisiert",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          864,
+          704
+        ]
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": ""
+            },
+            "conditions": [
+              {
+                "id": "text-check",
+                "leftValue": "={{ $json.parse_error }}",
+                "rightValue": "non_text_message",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEquals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "id": "text-guard",
+        "name": "Text Guard",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          864,
+          512
+        ]
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "r1",
+                "name": "chat_id",
+                "value": "={{ $json.chat_id }}",
+                "type": "number"
+              },
+              {
+                "id": "r2",
+                "name": "reply_text",
+                "value": "Ungueltige Eingabe. Nutze /help fuer alle verfuegbaren Commands.",
+                "type": "string"
+              },
+              {
+                "id": "r3",
+                "name": "reply_parse_mode",
+                "value": "",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "reply-nur-text",
+        "name": "Reply: Nur Text-Commands",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          1088,
+          704
+        ]
+      },
+      {
+        "parameters": {},
+        "id": "remove-duplicates",
+        "name": "Remove Duplicates",
+        "type": "n8n-nodes-base.removeDuplicates",
+        "typeVersion": 1,
+        "position": [
+          1088,
+          512
+        ]
+      },
+      {
+        "parameters": {
+          "workflowId": "pzYSe2gnvbXLedvG",
+          "options": {}
+        },
+        "id": "exec-task-next",
+        "name": "Execute: task-next",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1568,
+          112
+        ]
+      },
+      {
+        "parameters": {
+          "workflowId": "6d1fV8surkco100H",
+          "options": {}
+        },
+        "id": "exec-task-waiting",
+        "name": "Execute: task-waiting",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1568,
+          288
+        ]
+      },
+      {
+        "parameters": {
+          "workflowId": "Jm3AB26MzUlxauV6",
+          "options": {}
+        },
+        "id": "exec-knowledge",
+        "name": "Execute: knowledge-draft",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1568,
+          464
+        ]
+      },
+      {
+        "parameters": {
+          "workflowId": "FLsNZCEhoqtwCbPG",
+          "options": {}
+        },
+        "id": "exec-calendar",
+        "name": "Execute: calendar-query",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1568,
+          640
+        ]
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "h1",
+                "name": "chat_id",
+                "value": "={{ $json.chat_id }}",
+                "type": "number"
+              },
+              {
+                "id": "h2",
+                "name": "reply_text",
+                "value": "Command-Uebersicht\\n\\n/ping - Bot-Test\\n/help - Diese Hilfe\\n\\nt: Titel /due=YYYY-MM-DD\\nf: Titel /due=YYYY-MM-DD\\nk: Titel\\nq: free YYYY-MM-DD /window=09:00-17:00 /tz=Europe/Berlin\\n\\nBeispiele:\\nt: Rechnung senden /due=2026-04-12\\nf: Antwort von Max /due=2026-04-14\\nk: Idee fuer Telegram Intake\\nq: free 2026-04-18 /window=09:00-17:00 /tz=Europe/Berlin",
+                "type": "string"
+              },
+              {
+                "id": "h3",
+                "name": "reply_parse_mode",
+                "value": "Markdown",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "help-reply",
+        "name": "Help Reply",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          1568,
+          832
+        ]
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "p1",
+                "name": "chat_id",
+                "value": "={{ $json.chat_id }}",
+                "type": "number"
+              },
+              {
+                "id": "p2",
+                "name": "reply_text",
+                "value": "ok - telegram intake aktiv",
+                "type": "string"
+              },
+              {
+                "id": "p3",
+                "name": "reply_parse_mode",
+                "value": "",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "ping-reply",
+        "name": "Ping Reply",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          1568,
+          992
+        ]
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "f1",
+                "name": "chat_id",
+                "value": "={{ $json.chat_id }}",
+                "type": "number"
+              },
+              {
+                "id": "f2",
+                "name": "reply_text",
+                "value": "Ungueltiger Command. Nutze /help.\\n\\nErlaubt sind:\\n- t: Titel /due=YYYY-MM-DD\\n- f: Titel /due=YYYY-MM-DD\\n- k: Titel\\n- q: free YYYY-MM-DD /window=09:00-17:00 /tz=Europe/Berlin",
+                "type": "string"
+              },
+              {
+                "id": "f3",
+                "name": "reply_parse_mode",
+                "value": "",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "fallback-reply",
+        "name": "Fallback Reply",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          1568,
+          1152
+        ]
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $json.chat_id }}",
+          "text": "={{ $json.reply_text }}",
+          "additionalFields": {}
+        },
+        "id": "telegram-reply",
+        "name": "Telegram Reply",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          1824,
+          512
+        ],
+        "webhookId": "d6ee9e85-50d6-4f7f-9c20-30f2911d11e9",
+        "credentials": {
+          "telegramApi": {
+            "id": "Arepn5qW2Si65rVX",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "dataType": "string",
+          "value1": "={{ $json.command }}",
+          "rules": {
+            "rules": [
+              {
+                "value2": "task"
+              },
+              {
+                "value2": "followup",
+                "output": 1
+              },
+              {
+                "value2": "knowledge",
+                "output": 2
+              }
+            ]
+          },
+          "fallbackOutput": 3
+        },
+        "id": "command-switch-1",
+        "name": "Route Command 1",
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 1,
+        "position": [
+          1312,
+          400
+        ]
+      },
+      {
+        "parameters": {
+          "dataType": "string",
+          "value1": "={{ $json.command }}",
+          "rules": {
+            "rules": [
+              {
+                "value2": "calendar_query"
+              },
+              {
+                "value2": "help",
+                "output": 1
+              },
+              {
+                "value2": "ping",
+                "output": 2
+              }
+            ]
+          },
+          "fallbackOutput": 3
+        },
+        "id": "command-switch-2",
+        "name": "Route Command 2",
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 1,
+        "position": [
+          1328,
+          784
+        ]
+      }
+    ],
+    "connections": {
+      "Execute Workflow Trigger": {
+        "main": [
+          [
+            {
+              "node": "Normalize Event",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Normalize Event": {
+        "main": [
+          [
+            {
+              "node": "Allowlist Check",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Allowlist Check": {
+        "main": [
+          [
+            {
+              "node": "Text Guard",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Reply: Nicht autorisiert",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Reply: Nicht autorisiert": {
+        "main": [
+          [
+            {
+              "node": "Telegram Reply",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Text Guard": {
+        "main": [
+          [
+            {
+              "node": "Remove Duplicates",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Reply: Nur Text-Commands",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Reply: Nur Text-Commands": {
+        "main": [
+          [
+            {
+              "node": "Telegram Reply",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Remove Duplicates": {
+        "main": [
+          [
+            {
+              "node": "Route Command 1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Route Command": {
+        "main": [
+          [
+            {
+              "node": "Execute: task-next",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Execute: task-waiting",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Execute: knowledge-draft",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Execute: calendar-query",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Help Reply",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Ping Reply",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Fallback Reply",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute: task-next": {
+        "main": [
+          [
+            {
+              "node": "Telegram Reply",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute: task-waiting": {
+        "main": [
+          [
+            {
+              "node": "Telegram Reply",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute: knowledge-draft": {
+        "main": [
+          [
+            {
+              "node": "Telegram Reply",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute: calendar-query": {
+        "main": [
+          [
+            {
+              "node": "Telegram Reply",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Help Reply": {
+        "main": [
+          [
+            {
+              "node": "Telegram Reply",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Ping Reply": {
+        "main": [
+          [
+            {
+              "node": "Telegram Reply",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Fallback Reply": {
+        "main": [
+          [
+            {
+              "node": "Telegram Reply",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Route Command 1": {
+        "main": [
+          [
+            {
+              "node": "Execute: task-next",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Execute: task-waiting",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Execute: knowledge-draft",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Route Command 2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Route Command 2": {
+        "main": [
+          [
+            {
+              "node": "Execute: calendar-query",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Help Reply",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Ping Reply",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Fallback Reply",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Endrit Murati",
+    "name": "Version 1c82f9f2",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-04-11T16:02:41.301Z",
+        "id": 91,
+        "workflowId": "2Ckdfk7HHSRFnQoh",
+        "versionId": "1c82f9f2-0fcb-444b-a5eb-081ec4d56d95",
+        "event": "activated",
+        "userId": "a3d35fcb-0e60-4b54-bc69-fded945cc6eb"
+      },
+      {
+        "createdAt": "2026-04-15T14:31:47.620Z",
+        "id": 126,
+        "workflowId": "2Ckdfk7HHSRFnQoh",
+        "versionId": "1c82f9f2-0fcb-444b-a5eb-081ec4d56d95",
+        "event": "deactivated",
+        "userId": "a3d35fcb-0e60-4b54-bc69-fded945cc6eb"
+      },
+      {
+        "createdAt": "2026-04-16T08:29:59.361Z",
+        "id": 150,
+        "workflowId": "2Ckdfk7HHSRFnQoh",
+        "versionId": "1c82f9f2-0fcb-444b-a5eb-081ec4d56d95",
+        "event": "deactivated",
+        "userId": "a3d35fcb-0e60-4b54-bc69-fded945cc6eb"
+      },
+      {
+        "createdAt": "2026-04-16T08:29:59.734Z",
+        "id": 151,
+        "workflowId": "2Ckdfk7HHSRFnQoh",
+        "versionId": "1c82f9f2-0fcb-444b-a5eb-081ec4d56d95",
+        "event": "activated",
+        "userId": "a3d35fcb-0e60-4b54-bc69-fded945cc6eb"
+      }
+    ]
+  }
+}
