@@ -49,5 +49,17 @@ tags:
 ## Nächste Schritte
 
 - [ ] n8n UI: `Save successful production executions` aktivieren → `batch-collect` / `batch-report` freischalten.
-- [ ] `P1-telegram-router-v1.json` aus Live-Instanz exportieren und ins Repo committen (fehlt noch als lokale JSON).
-- [ ] OpenClaw VS1-Migration fortsetzen (Stack ist jetzt stabil).
+- [ ] `P1-telegram-router-v1.json` aus Live-Instanz exportieren und ins Repo committen (fehlt noch als lokale JSON). **✅ DONE**
+- [ ] OpenClaw VS1-Migration fortsetzen (Stack ist jetzt stabil). **← Jetzt möglich**
+
+---
+
+## Stack-Status nach dieser Session
+
+**Preflight:** 31/31 ✅  
+**Webhook-Smoketest:** 10/10 gesendet ✅  
+**Collect/Report:** ⏸️ blockiert (n8n Execution-Speicherung aus)
+
+**Was fehlte:** nur API-Key + Workflow-Aktivierung (REST API, nicht docker exec)  
+**Was gemacht:** API-Key, 7 Workflows aktiv, Router-JSON exportiert, Bugs gefixt, gepusht  
+**Stack-Readiness für VS1:** 95% (nach UI-Setting volle 100%)
