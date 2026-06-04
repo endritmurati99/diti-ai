@@ -1,0 +1,312 @@
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 1,
+  "transport": "webhook",
+  "status": "sent",
+  "sent_at": "2026-04-16T08:33:05.836147Z",
+  "prefix": "/ping",
+  "writes": false,
+  "text": "/ping",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00001",
+  "chat_id": 0,
+  "message_id": 1,
+  "test_run_id": "batch-20260416T083305Z-f8ce1f1b-00001",
+  "response_status": 200,
+  "response_body": {
+    "status": "ok",
+    "source_id": "",
+    "run_id": null,
+    "seq": null,
+    "reply_text": "ok - telegram intake aktiv",
+    "parse_error": "",
+    "write_safety_error": "",
+    "task_list": "",
+    "note_path": "",
+    "transport": "webhook"
+  },
+  "webhook_url": "http://localhost:5678/webhook/test-intake"
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 6,
+  "transport": "webhook",
+  "status": "sent",
+  "sent_at": "2026-04-16T08:33:05.839061Z",
+  "prefix": "/ping",
+  "writes": false,
+  "text": "/ping",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00006",
+  "chat_id": 0,
+  "message_id": 6,
+  "test_run_id": "batch-20260416T083305Z-f8ce1f1b-00006",
+  "response_status": 200,
+  "response_body": {
+    "status": "ok",
+    "source_id": "",
+    "run_id": null,
+    "seq": null,
+    "reply_text": "ok - telegram intake aktiv",
+    "parse_error": "",
+    "write_safety_error": "",
+    "task_list": "",
+    "note_path": "",
+    "transport": "webhook"
+  },
+  "webhook_url": "http://localhost:5678/webhook/test-intake"
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 8,
+  "transport": "webhook",
+  "status": "sent",
+  "sent_at": "2026-04-16T08:33:05.840178Z",
+  "prefix": "/ping",
+  "writes": false,
+  "text": "/ping",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00008",
+  "chat_id": 0,
+  "message_id": 8,
+  "test_run_id": "batch-20260416T083305Z-f8ce1f1b-00008",
+  "response_status": 200,
+  "response_body": {
+    "status": "ok",
+    "source_id": "",
+    "run_id": null,
+    "seq": null,
+    "reply_text": "ok - telegram intake aktiv",
+    "parse_error": "",
+    "write_safety_error": "",
+    "task_list": "",
+    "note_path": "",
+    "transport": "webhook"
+  },
+  "webhook_url": "http://localhost:5678/webhook/test-intake"
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 4,
+  "transport": "webhook",
+  "status": "sent",
+  "sent_at": "2026-04-16T08:33:05.837761Z",
+  "prefix": "/help",
+  "writes": false,
+  "text": "/help",
+  "expected_command": "help",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00004",
+  "chat_id": 0,
+  "message_id": 4,
+  "test_run_id": "batch-20260416T083305Z-f8ce1f1b-00004",
+  "response_status": 200,
+  "response_body": {
+    "status": "ok",
+    "source_id": "",
+    "run_id": null,
+    "seq": null,
+    "reply_text": "Command-Uebersicht\\n\\n/ping - Bot-Test\\n/help - Diese Hilfe\\n/start - Alias fuer /help\\n\\nDSL Fast Lane:\\nt: Titel /due=YYYY-MM-DD\\nf: Titel /due=YYYY-MM-DD\\nk: Titel\\nq: free YYYY-MM-DD /window=09:00-17:00 /tz=Europe/Berlin\\n\\nNatuerliche Sprache:\\nMilch, Eier und Brot kaufen\\n\\nBeispiele:\\nt: Rechnung senden /due=2026-04-12\\nf: Antwort von Max /due=2026-04-14\\nk: Idee fuer Telegram Intake\\nq: free 2026-04-18 /window=09:00-17:00 /tz=Europe/Berlin",
+    "parse_error": "",
+    "write_safety_error": "",
+    "task_list": "",
+    "note_path": "",
+    "transport": "webhook"
+  },
+  "webhook_url": "http://localhost:5678/webhook/test-intake"
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 5,
+  "transport": "webhook",
+  "status": "sent",
+  "sent_at": "2026-04-16T08:33:05.838600Z",
+  "prefix": "t:",
+  "writes": true,
+  "text": "t: [TEST-batch-20260416T083305Z-f8ce1f1b-00005] Wohnung putzen /due=next monday /prio=M /ctx=finance",
+  "expected_command": "task",
+  "expected_route": "P1-telegram-task-next-v1",
+  "expected_workflow": "P1-telegram-task-next-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-task-next-v1"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00005",
+  "chat_id": 0,
+  "message_id": 5,
+  "test_run_id": "batch-20260416T083305Z-f8ce1f1b-00005",
+  "response_status": 200,
+  "response_body": {
+    "status": "ok",
+    "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00005",
+    "run_id": "batch-20260416T083305Z-f8ce1f1b",
+    "seq": 5,
+    "reply_text": "Task erstellt: [TEST-batch-20260416T083305Z-f8ce1f1b-00005] Wohnung putzen  monday",
+    "parse_error": "",
+    "write_safety_error": "",
+    "task_list": "N3V3OGpNaGY4MC0xYWN4Wg",
+    "note_path": "",
+    "transport": "webhook"
+  },
+  "webhook_url": "http://localhost:5678/webhook/test-intake"
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 9,
+  "transport": "webhook",
+  "status": "sent",
+  "sent_at": "2026-04-16T08:33:05.840857Z",
+  "prefix": "f:",
+  "writes": true,
+  "text": "f: [TEST-batch-20260416T083305Z-f8ce1f1b-00009] Backup-Lauf kontrollieren 日本語タスク /to=Buchhaltung /due=next monday",
+  "expected_command": "followup",
+  "expected_route": "P1-telegram-task-waiting-v1",
+  "expected_workflow": "P1-telegram-task-waiting-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-task-waiting-v1"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00009",
+  "chat_id": 0,
+  "message_id": 9,
+  "test_run_id": "batch-20260416T083305Z-f8ce1f1b-00009",
+  "response_status": 200,
+  "response_body": {
+    "status": "ok",
+    "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00009",
+    "run_id": "batch-20260416T083305Z-f8ce1f1b",
+    "seq": 9,
+    "reply_text": "Follow-up erstellt: WAITING: [TEST-batch-20260416T083305Z-f8ce1f1b-00009] Backup-Lauf kontrollieren 日本語タスク   monday",
+    "parse_error": "",
+    "write_safety_error": "",
+    "task_list": "Uk1USUZvSldsYWJTamRtTA",
+    "note_path": "",
+    "transport": "webhook"
+  },
+  "webhook_url": "http://localhost:5678/webhook/test-intake"
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 10,
+  "transport": "webhook",
+  "status": "sent",
+  "sent_at": "2026-04-16T08:33:05.841495Z",
+  "prefix": "/help",
+  "writes": false,
+  "text": "/help",
+  "expected_command": "help",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00010",
+  "chat_id": 0,
+  "message_id": 10,
+  "test_run_id": "batch-20260416T083305Z-f8ce1f1b-00010",
+  "response_status": 200,
+  "response_body": {
+    "status": "ok",
+    "source_id": "",
+    "run_id": null,
+    "seq": null,
+    "reply_text": "Command-Uebersicht\\n\\n/ping - Bot-Test\\n/help - Diese Hilfe\\n/start - Alias fuer /help\\n\\nDSL Fast Lane:\\nt: Titel /due=YYYY-MM-DD\\nf: Titel /due=YYYY-MM-DD\\nk: Titel\\nq: free YYYY-MM-DD /window=09:00-17:00 /tz=Europe/Berlin\\n\\nNatuerliche Sprache:\\nMilch, Eier und Brot kaufen\\n\\nBeispiele:\\nt: Rechnung senden /due=2026-04-12\\nf: Antwort von Max /due=2026-04-14\\nk: Idee fuer Telegram Intake\\nq: free 2026-04-18 /window=09:00-17:00 /tz=Europe/Berlin",
+    "parse_error": "",
+    "write_safety_error": "",
+    "task_list": "",
+    "note_path": "",
+    "transport": "webhook"
+  },
+  "webhook_url": "http://localhost:5678/webhook/test-intake"
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 7,
+  "transport": "webhook",
+  "status": "sent",
+  "sent_at": "2026-04-16T08:33:05.839662Z",
+  "prefix": "q:",
+  "writes": false,
+  "text": "q: availability 2026-04-21 /window=08:00-10:00 /tz=Europe/Berlin",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00007",
+  "chat_id": 0,
+  "message_id": 7,
+  "test_run_id": "batch-20260416T083305Z-f8ce1f1b-00007",
+  "response_status": 200,
+  "response_body": "",
+  "webhook_url": "http://localhost:5678/webhook/test-intake"
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 2,
+  "transport": "webhook",
+  "status": "sent",
+  "sent_at": "2026-04-16T08:33:05.836989Z",
+  "prefix": "q:",
+  "writes": false,
+  "text": "q: termine 2026-04-30 /window=10:00-16:00 /tz=America/New_York",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00002",
+  "chat_id": 0,
+  "message_id": 2,
+  "test_run_id": "batch-20260416T083305Z-f8ce1f1b-00002",
+  "response_status": 200,
+  "response_body": "",
+  "webhook_url": "http://localhost:5678/webhook/test-intake"
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 3,
+  "transport": "webhook",
+  "status": "sent",
+  "sent_at": "2026-04-16T08:33:05.837365Z",
+  "prefix": "q:",
+  "writes": false,
+  "text": "q: termine 2026-04-30 /window=08:00-10:00 /tz=America/New_York",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00003",
+  "chat_id": 0,
+  "message_id": 3,
+  "test_run_id": "batch-20260416T083305Z-f8ce1f1b-00003",
+  "response_status": 200,
+  "response_body": "",
+  "webhook_url": "http://localhost:5678/webhook/test-intake"
+}

@@ -75,18 +75,61 @@ After workflow changes:
 
 ## Testing
 
-Batch testing is webhook-first and transport-safe.
+Testing in Diti AI is evidence-based. Technical activation and proven live behavior are different states.
 
 - Registry source of truth: [config/testing-registry.json](config/testing-registry.json)
 - Operator runbook: [docs/testing-runbook.md](docs/testing-runbook.md)
 - Live-state snapshot: [docs/live-state-2026-04-14.md](docs/live-state-2026-04-14.md)
 
-Testing rules:
+Use only these status labels:
+
+- `configured` - configuration, credentials, and routing metadata exist
+- `activated` - a workflow or consumer is technically active
+- `synthetic_verified` - webhook, harness, or `test-intake` behavior is proven synthetically
+- `live_proven` - a real end-to-end run is proven with full evidence
+
+Status language rules:
+
+- never use `activated` as a synonym for `tested`, `working`, `ready`, `cut over`, or `live`
+- never claim `cut over`, `works`, or `tested` unless the exact status label is named
+- a workflow may be `activated` without being `live_proven`
+
+Transport rules:
 
 - use `diti-n8n.cmd` for all Diti runbook commands
-- use `--transport telegram` only for tiny smoke tests
 - use `--transport webhook` for parser, routing, safety, and load runs
+- use `--transport telegram` only for explicit live-proof runs or tiny smoke checks
+- `test_run`-based test sinks are allowed only after routing is synthetically proven for the affected workflow path
 - test writes may target only `NEXT_TEST`, `WAITING_TEST`, and `obsidian-vault/00_INBOX_TEST/`
+
+Before any live test, all of these gates must be satisfied and documented:
+
+- `Save successful production executions = On` in n8n
+- `single bot owner confirmed`
+- `active ingress documented`
+- `test_run routing proven` for the relevant workflow path
+- absolute timestamp with timezone recorded
+
+Evidence rules for every live run:
+
+- exact test text
+- start time with timezone
+- active ingress path
+- n8n workflow name
+- n8n execution ID
+- Telegram reply observed yes/no
+- observed side effect
+- cleanup status
+- final verdict per path and use case
+
+Abort a live ladder immediately if any of these occur:
+
+- no Telegram reply in the defined observation window
+- no matching saved n8n success execution
+- wrong workflow or wrong workflow chain
+- write into a production sink instead of the expected test sink
+- missing correlation between test text, execution, and artifact
+- unclear bot owner or suspected parallel consumer
 
 Common commands:
 

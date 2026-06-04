@@ -1,0 +1,195 @@
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 1,
+  "transport": "webhook",
+  "prefix": "/ping",
+  "text": "/ping",
+  "sent_at": "2026-04-16T08:33:05.836147Z",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00001",
+  "status": "orphan",
+  "correlation_method": null,
+  "category": "correlation",
+  "error": "No matching intake execution found."
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 6,
+  "transport": "webhook",
+  "prefix": "/ping",
+  "text": "/ping",
+  "sent_at": "2026-04-16T08:33:05.839061Z",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00006",
+  "status": "orphan",
+  "correlation_method": null,
+  "category": "correlation",
+  "error": "No matching intake execution found."
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 8,
+  "transport": "webhook",
+  "prefix": "/ping",
+  "text": "/ping",
+  "sent_at": "2026-04-16T08:33:05.840178Z",
+  "expected_command": "ping",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00008",
+  "status": "orphan",
+  "correlation_method": null,
+  "category": "correlation",
+  "error": "No matching intake execution found."
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 4,
+  "transport": "webhook",
+  "prefix": "/help",
+  "text": "/help",
+  "sent_at": "2026-04-16T08:33:05.837761Z",
+  "expected_command": "help",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00004",
+  "status": "orphan",
+  "correlation_method": null,
+  "category": "correlation",
+  "error": "No matching intake execution found."
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 5,
+  "transport": "webhook",
+  "prefix": "t:",
+  "text": "t: [TEST-batch-20260416T083305Z-f8ce1f1b-00005] Wohnung putzen /due=next monday /prio=M /ctx=finance",
+  "sent_at": "2026-04-16T08:33:05.838600Z",
+  "expected_command": "task",
+  "expected_route": "P1-telegram-task-next-v1",
+  "expected_workflow": "P1-telegram-task-next-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-task-next-v1"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00005",
+  "status": "orphan",
+  "correlation_method": null,
+  "category": "correlation",
+  "error": "No matching intake execution found."
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 9,
+  "transport": "webhook",
+  "prefix": "f:",
+  "text": "f: [TEST-batch-20260416T083305Z-f8ce1f1b-00009] Backup-Lauf kontrollieren 日本語タスク /to=Buchhaltung /due=next monday",
+  "sent_at": "2026-04-16T08:33:05.840857Z",
+  "expected_command": "followup",
+  "expected_route": "P1-telegram-task-waiting-v1",
+  "expected_workflow": "P1-telegram-task-waiting-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-task-waiting-v1"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00009",
+  "status": "orphan",
+  "correlation_method": null,
+  "category": "correlation",
+  "error": "No matching intake execution found."
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 10,
+  "transport": "webhook",
+  "prefix": "/help",
+  "text": "/help",
+  "sent_at": "2026-04-16T08:33:05.841495Z",
+  "expected_command": "help",
+  "expected_route": "P1-telegram-intake-v2",
+  "expected_workflow": "P1-telegram-intake-v2",
+  "expected_chain": [
+    "P1-telegram-intake-v2"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00010",
+  "status": "orphan",
+  "correlation_method": null,
+  "category": "correlation",
+  "error": "No matching intake execution found."
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 7,
+  "transport": "webhook",
+  "prefix": "q:",
+  "text": "q: availability 2026-04-21 /window=08:00-10:00 /tz=Europe/Berlin",
+  "sent_at": "2026-04-16T08:33:05.839662Z",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00007",
+  "status": "orphan",
+  "correlation_method": null,
+  "category": "correlation",
+  "error": "No matching intake execution found."
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 2,
+  "transport": "webhook",
+  "prefix": "q:",
+  "text": "q: termine 2026-04-30 /window=10:00-16:00 /tz=America/New_York",
+  "sent_at": "2026-04-16T08:33:05.836989Z",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00002",
+  "status": "orphan",
+  "correlation_method": null,
+  "category": "correlation",
+  "error": "No matching intake execution found."
+}
+{
+  "run_id": "batch-20260416T083305Z-f8ce1f1b",
+  "seq": 3,
+  "transport": "webhook",
+  "prefix": "q:",
+  "text": "q: termine 2026-04-30 /window=08:00-10:00 /tz=America/New_York",
+  "sent_at": "2026-04-16T08:33:05.837365Z",
+  "expected_command": "calendar_query",
+  "expected_route": "P1-telegram-calendar-query-v1",
+  "expected_workflow": "P1-telegram-calendar-query-v1",
+  "expected_chain": [
+    "P1-telegram-intake-v2",
+    "P1-telegram-calendar-query-v1"
+  ],
+  "source_id": "test_batch-20260416T083305Z-f8ce1f1b_00003",
+  "status": "orphan",
+  "correlation_method": null,
+  "category": "correlation",
+  "error": "No matching intake execution found."
+}
